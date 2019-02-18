@@ -34,9 +34,9 @@ class caisseController extends Controller {
         //$journal = $this->Journal->get($this->request->idjournal);
         //$refcaisse = $journal['CODE'].'000'.time();
         $typetransaction = empty($this->request->typetransaction) ? "C" : $this->request->typetransaction;
-        if($typetransaction == 'R'){
+        if ($typetransaction == 'R') {
             $refcaisse = "RE" . '000' . time();
-        }else{
+        } else {
             $refcaisse = "JE" . '000' . time();
         }
 
@@ -53,7 +53,7 @@ class caisseController extends Controller {
         $this->Caisse->insert($params);
         $idcaisse = $this->Caisse->lastInsertId();
         $bordereau_banque = $this->request->bordereau;
-        if(!empty($bordereau_banque)){
+        if (!empty($bordereau_banque)) {
             $this->Caisse->insertBordereauBanque($idcaisse, $bordereau_banque);
         }
         header("Location:" . Router::url("caisse", "recu", $idcaisse));
@@ -68,7 +68,11 @@ class caisseController extends Controller {
         }
 
         if (!empty($this->request->reftransaction)) {
-            $this->validerSaisie();
+            if (!empty($this->request->typetransaction) && $this->request->typetransaction == 'M') {
+                $this->validerMoratoire();
+            } else {
+                $this->validerSaisie();
+            }
         }
         $this->view->clientsJS("caisse" . DS . "saisie");
         $view = new View();
@@ -78,6 +82,26 @@ class caisseController extends Controller {
 
         $content = $view->Render("caisse" . DS . "saisie", false);
         $this->Assign("content", $content);
+    }
+
+    public function validerMoratoire() {
+        $this->loadModel('moratoire');
+        assert($this->request->typetransaction == 'M');
+        $personnel = $this->Personnel->getBy(["USER" => $this->session->iduser]);
+        $refmoratoire = "MO" . '000' . time();
+        $params = [
+            "compte" => $this->request->idcompte,
+            "dateoperation" => date("Y-m-d H:i:s", time()),
+            'valide' => 0,
+            "montant" => $this->request->montant,
+            "echeance" => parseDate($this->request->echeance),
+            "refmoratoire" => $refmoratoire,
+            "description" => $this->request->description,
+            "enregistrerpar" => $personnel['IDPERSONNEL'],
+            "periode" => $_SESSION['anneeacademique']];
+        $this->Moratoire->insert($params);
+        $idmoratoire = $this->Moratoire->lastInsertId();
+        header("Location:" . Router::url("moratoire", "recu", $idmoratoire));
     }
 
     public function ajaxsaisie() {
@@ -257,16 +281,23 @@ class caisseController extends Controller {
         $view->Assign("operations", $operations);
         $tableOperation = $view->Render("caisse" . DS . "ajax" . DS . "operation", false);
         $view->Assign("tableOperation", $tableOperation);
+
         $operations = $this->Caissesupprimee->selectAll();
         $view->Assign("operations", $operations);
         $operationSupprimes = $view->Render("caisse" . DS . "ajax" . DS . "operationsupprimee", false);
+        $view->Assign("operationSupprimes", $operationSupprimes);
 
         $operations = $this->Caisse->getOperationsRemises();
         $view->Assign('operations', $operations);
         $operationsRemises = $view->Render('caisse' . DS . 'ajax' . DS . 'operationRemise', false);
         $view->Assign('operationsRemises', $operationsRemises);
-        
-        $view->Assign("operationSupprimes", $operationSupprimes);
+
+        $this->loadModel('moratoire');
+        $operations = $this->Moratoire->selectAll();
+        $view->Assign('operations', $operations);
+        $moratoires = $view->Render('caisse' . DS . 'ajax' . DS . 'moratoire', false);
+        $view->Assign('moratoires', $moratoires);
+
         $content = $view->Render("caisse" . DS . "operation", false);
         $this->Assign("content", $content);
     }
@@ -337,10 +368,21 @@ class caisseController extends Controller {
             "imprimerpar" => $op['IMPRIMERPAR'],
             "dateimpression" => $op['DATEIMPRESSION'],
             "valide" => $op['VALIDE'],
-            "periode" => $op['PERIODE']
+            "periode" => $op['PERIODE'],
+            'observations' => $op['OBSERVATIONS'],
+            'dateobservation' => $op['DATEOBSERVATION']
         ];
         $this->Caissesupprimee->insert($params);
         $this->Caisse->delete($idcaisse);
+        header("Location:" . Router::url("caisse", "operation"));
+    }
+
+    public function deletemoratoire($idmoratoire) {
+        $personnel = $this->Personnel->getBy(["USER" => $this->session->iduser]);
+        $params = ['supprimer' => date('Y-m-d H:i:s', time()),
+            'supprimerpar' => $personnel['IDPERSONNEL']];
+        $this->loadModel('moratoire');
+        $this->Moratoire->update($params, ['idmoratoire' => $idmoratoire]);
         header("Location:" . Router::url("caisse", "operation"));
     }
 
@@ -373,9 +415,9 @@ class caisseController extends Controller {
         $action = $this->request->action;
         $type = $this->request->type;
         $idcaisse = $this->request->idcaisse;
-        if($type == 'R'){
+        if ($type == 'R') {
             $caisse = $this->Caisse->get($idcaisse);
-        }else{
+        } else {
             $caisse = $this->Caissesupprimee->get($idcaisse);
         }
         switch ($action) {
@@ -403,9 +445,9 @@ class caisseController extends Controller {
                         }
                     }
                     if ($ok) {
-                        if($type == 'R'){
+                        if ($type == 'R') {
                             $this->Caisse->update($params, ['idcaisse' => $idcaisse]);
-                        }else{
+                        } else {
                             $this->Caissesupprimee->update($params, ["idcaisse" => $idcaisse]);
                         }
                         $operations = $this->Caissesupprimee->selectAll();

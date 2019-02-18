@@ -27,21 +27,29 @@ if (isAuth(532)) {
 if(isAuth(537)){
     $_maxnbre = $_maxnbre + 1;
 }
+if(isAuth(538)){
+    $_maxnbre = $_maxnbre + 1;
+}
 ?>
 <div class="page">
     <div class="tabs" style="width: 100%">
         <ul>
             <li id="tab1" class="courant"><a onclick="onglets(1, 1, <?php echo $_maxnbre; ?>);">
-                    <img border ="0" alt="" src="<?php echo SITE_ROOT . "public/img/icons/operation.png"; ?>" />Op&eacute;rations caisses</a></li>
+                    <img border ="0" alt="" src="<?php echo SITE_ROOT . "public/img/icons/operation.png"; ?>" />&nbsp;Op&eacute;rations caisses</a></li>
             <li id="tab2" class="noncourant"><a onclick="onglets(1, 2, <?php echo $_maxnbre; ?>);">
-                    <img border ="0" alt="" src="<?php echo SITE_ROOT . "public/img/icons/caisse.png"; ?>" />Totaux</a></li>
+                    <img border ="0" alt="" src="<?php echo SITE_ROOT . "public/img/icons/caisse.png"; ?>" />&nbsp;Totaux</a></li>
             <?php if (isAuth(532)) { ?>
                 <li id="tab3" class="noncourant"><a onclick="onglets(1, 3, <?php echo $_maxnbre; ?>);">
-                        <img border ="0" alt="" src="<?php echo SITE_ROOT . "public/img/icons/opsupprimees.png"; ?>" />Op&eacute;rations supprim&eacute;es</a></li>
+                        <img border ="0" alt="" src="<?php echo SITE_ROOT . "public/img/icons/opsupprimees.png"; ?>" />&nbsp;Op&eacute;rations supprim&eacute;es</a></li>
             <?php }
             if (isAuth(537)) { ?>
                 <li id="tab4" class="noncourant"><a onclick="onglets(1, 4, <?php echo $_maxnbre; ?>);">
-                        <img border ="0" alt="" src="<?php echo SITE_ROOT . "public/img/icons/remise.png"; ?>" />Remises Effectu&eacute;es</a></li>
+                        <img border ="0" alt="" src="<?php echo SITE_ROOT . "public/img/icons/remise.png"; ?>" />&nbsp;Remises Effectu&eacute;es</a></li>
+            <?php }
+            if (isAuth(538)) { ?>
+                <li id="tab5" class="noncourant"><a onclick="onglets(1, 5, <?php echo $_maxnbre; ?>);">
+                        <img border ="0" alt="" src="<?php echo SITE_ROOT . "public/img/icons/moratoire.png"; ?>" />&nbsp;
+                        Moratoires</a></li>
             <?php } ?>
         </ul>
     </div>
@@ -64,6 +72,9 @@ if(isAuth(537)){
     </div>
      <div id="onglet4" class="onglet" style="display: none; height: 90%;">
         <?php echo $operationsRemises; ?>
+    </div>
+     <div id="onglet5" class="onglet" style="display: none; height: 90%;">
+        <?php echo $moratoires; ?>
     </div>
 </div>
 <div class="navigation">

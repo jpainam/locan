@@ -493,6 +493,13 @@ function peutSupprimerLesOperationsCaisses() {
         return false;
     }
 }
+function peutSupprimerLesMoratoires(){
+    if ($_SESSION['idprofile'] == DIRECTOR_PROFILE && $_SESSION['iduser'] == PA_FRANC_ID) {
+        return true;
+    } else {
+        return false;
+    }
+}
 function peutFaireDesRemisesCaisses(){
    if ($_SESSION['idprofile'] == DIRECTOR_PROFILE && $_SESSION['iduser'] == PA_FRANC_ID) {
         return true;

@@ -116,3 +116,9 @@ function supprimerCaisse($idcaisse) {
         document.location = "./delete/" + $idcaisse;
     }
 }
+function supprimerMoratoire($idmoratoire) {
+    var _ok = confirm('Etes-vous sûr de vouloir supprimer ce moratoire ?');
+    if (_ok) {
+        document.location = "./deletemoratoire/" + $idmoratoire;
+    }
+}

@@ -15,7 +15,7 @@
             . "<td>" . $op['NOMEL'] . ' ' . $op['PRENOMEL'] . ".</td><td>" . $op['REFCAISSE'] . "</td>"
             . '<td>' . $op['DESCRIPTION'] . '</td><td align="right">' . moneyString($op['MONTANT']) . "</td>";
 
-            echo "<td align='center' title='Restaurer'>";
+            echo "<td align='center'>";
             if(peutSupprimerLesOperationsCaisses()){
                 echo "<img style='cursor:pointer' src='".img_delete()."' "
                         . "onclick='supprimerCaisse(".$op['IDCAISSE'].");' />";

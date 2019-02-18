@@ -45,6 +45,10 @@
                 <select name="typetransaction" <?php echo !isAuth(537) ? 'disabled="disabled"' : ''; ?>>
                     <option value="C" selected="selected">Cr&eacute;dit</option>
                     <option value="R">R&eacute;mise</option>
+                    <?php 
+                    if(isAuth(538)){
+                        echo '<option value="M">Moratoire</option>';
+                    } ?>
                     <option value="D">D&eacute;bit</option>
                 </select>
             </span>
@@ -60,7 +64,13 @@
             <span class="text" style="width:190px"><label>N° Bordereau Banque</label>
                 <input type="text" name="bordereau" />
             </span>
-
+            <?php if(isAuth(538)){ 
+                echo '<span class="text" style="width:200px"></span>';
+                echo '<span class="text" style="width:190px"><label>Ech&eacute;ance(<small>si moratoire</small>)</label>';
+                echo '<input type="date" name="echeance" />';
+                echo '</span>';
+            }
+            ?>
         </fieldset>
     </div>
     <div class="recapitulatif"></div>

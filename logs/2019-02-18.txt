@@ -1,0 +1,35 @@
+Time : 15:23:42
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'ca.PERIODE' in 'where clause'
+Raw SQL : SELECT mo.*, co.*, el.NOM as NOMEL, el.PRENOM AS PRENOMEL, p.*, resp.NOM AS NOMREP, resp.PRENOM AS PRENOMREP, resp.PORTABLE AS PORTABLEREP, resp.NUMSMS AS NUMSMS, resp.CIVILITE AS CIVILITEREP FROM `moratoires` mo INNER JOIN comptes_eleves co ON co.IDCOMPTE = ca.COMPTE INNER JOIN eleves el ON el.IDELEVE = co.ELEVE LEFT JOIN responsable_eleve res_el ON res_el.IDELEVE = el.IDELEVE LEFT JOIN responsables resp ON resp.IDRESPONSABLE = res_el.IDRESPONSABLE INNER JOIN personnels p ON p.IDPERSONNEL = ca.ENREGISTRERPAR WHERE  IDMORATOIRE = :IDMORATOIRE  AND ca.PERIODE = :_anneecad ORDER BY ca.DATEOPERATION DESC
+
+Time : 14:51:59
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'mo.SUPPRIMERPAR' in 'where clause'
+Raw SQL : SELECT mo.*, co.*, el.NOM as NOMEL, el.PRENOM AS PRENOMEL, p.NOM AS NOMENREG, p.PRENOM AS PRENOMENREG FROM moratoires mo INNER JOIN comptes_eleves co ON co.IDCOMPTE = mo.COMPTE INNER JOIN eleves el ON el.IDELEVE = co.ELEVE LEFT JOIN personnels p ON p.IDPERSONNEL = mo.ENREGISTRERPAR WHERE mo.PERIODE = :anneeacad AND (mo.SUPPRIMER IS NULL or mo.SUPPRIMERPAR IS NULL) ORDER BY mo.DATEOPERATION DESC
+
+Time : 14:40:29
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'mo.ELEVE' in 'on clause'
+Raw SQL : SELECT mo.*, el.NOM as NOMEL, el.PRENOM AS PRENOMEL, p.NOM AS NOMENREG, p.PRENOM AS PRENOMENREG FROM moratoires mo INNER JOIN eleves el ON el.IDELEVE = mo.ELEVE LEFT JOIN personnels p ON p.IDPERSONNEL = mo.ENREGISTRERPAR WHERE mo.PERIODE = :anneeacad ORDER BY mo.DATEOPERATION DESC
+
+Time : 14:38:03
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'DESCRIPTION' in 'field list'
+Raw SQL : INSERT INTO  moratoires( COMPTE, DATEOPERATION, VALIDE, MONTANT, ECHEANCE, REFMORATOIRE, DESCRIPTION, ENREGISTRERPAR, PERIODE) VALUES(:compte,:dateoperation,:valide,:montant,:echeance,:refmoratoire,:description,:enregistrerpar,:periode)
+
+Time : 14:36:47
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'DESCRIPTION' in 'field list'
+Raw SQL : INSERT INTO  moratoires( COMPTE, DATEOPERATION, VALIDE, MONTANT, ECHEANCE, REFMORATOIRE, DESCRIPTION, ENREGISTRERPAR, PERIODE) VALUES(:compte,:dateoperation,:valide,:montant,:echeance,:refmoratoire,:description,:enregistrerpar,:periode)
+
+Time : 14:04:11
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'DESCRIPTION' in 'field list'
+Raw SQL : INSERT INTO  moratoires( ELEVE, DATEOPERATION, VALIDE, MONTANT, ECHEANCE, REFMORATOIRE, DESCRIPTION, ENREGISTRERPAR, PERIODE) VALUES(:eleve,:dateoperation,:valide,:montant,:echeance,:refmoratoire,:description,:enregistrerpar,:periode)
+
+Time : 13:58:06
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'mo.ENREGISTRERPAR' in 'on clause'
+Raw SQL : SELECT mo.*, el.NOM as NOMEL, el.PRENOM AS PRENOMEL, p.NOM AS NOMENREG, p.PRENOM AS PRENOMENREG FROM moratoires mo INNER JOIN eleves el ON el.IDELEVE = mo.ELEVE LEFT JOIN personnels p ON p.IDPERSONNEL = mo.ENREGISTRERPAR WHERE mo.PERIODE = :anneeacad ORDER BY mo.DATEOPERATION DESC
+
+Time : 13:57:09
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'ca.PERIODE' in 'where clause'
+Raw SQL : SELECT mo.*, el.NOM as NOMEL, el.PRENOM AS PRENOMEL, p.NOM AS NOMENREG, p.PRENOM AS PRENOMENREG FROM moratoires mo INNER JOIN eleves el ON el.IDELEVE = mo.ELEVE LEFT JOIN personnels p ON p.IDPERSONNEL = ca.ENREGISTRERPAR WHERE ca.PERIODE = :anneeacad ORDER BY ca.DATEOPERATION DESC
+
+Time : 13:56:58
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'ca.PERIODE' in 'where clause'
+Raw SQL : SELECT mo.*, el.NOM as NOMEL, el.PRENOM AS PRENOMEL, p.NOM AS NOMENREG, p.PRENOM AS PRENOMENREG FROM moratoires mo INNER JOIN eleves el ON el.IDELEVE = mo.ELEVE LEFT JOIN personnels p ON p.IDPERSONNEL = ca.ENREGISTRERPAR WHERE ca.PERIODE = :anneeacad ORDER BY ca.DATEOPERATION DESC
