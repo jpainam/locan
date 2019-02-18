@@ -479,7 +479,7 @@ function genererCodeCompte($ideleve, $nom, $prenom) {
 }
 
 function peutValiderLesOperationsCaisses() {
-    if ($_SESSION['idprofile'] == DIRECTOR_PROFILE) {
+    if ($_SESSION['idprofile'] == DIRECTOR_PROFILE && $_SESSION['iduser'] == PA_FRANC_ID) {
         return true;
     } else {
         return false;
@@ -487,7 +487,7 @@ function peutValiderLesOperationsCaisses() {
 }
 
 function peutSupprimerLesOperationsCaisses() {
-    if ($_SESSION['idprofile'] == DIRECTOR_PROFILE) {
+    if ($_SESSION['idprofile'] == DIRECTOR_PROFILE && $_SESSION['iduser'] == PA_FRANC_ID) {
         return true;
     } else {
         return false;
