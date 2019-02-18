@@ -1,0 +1,11 @@
+Time : 14:46:09
+SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '== ca.IDCAISSE LEFT JOIN personnels p ON p.IDPERSONNEL = ca.ENREGISTRERPAR LEFT ' at line 1
+Raw SQL : SELECT ca.*, co.*, el.NOM as NOMEL, el.PRENOM AS PRENOMEL, p.NOM AS NOMENREG, p.PRENOM AS PRENOMENREG,p2.NOM AS NOMPERCU, p2.PRENOM AS PRENOMPERCU, n.NIVEAUHTML, cb.* FROM caisses ca INNER JOIN comptes_eleves co ON co.IDCOMPTE = ca.COMPTE INNER JOIN eleves el ON el.IDELEVE = co.ELEVE LEFT JOIN inscription i ON i.IDELEVE = el.IDELEVE AND i.ANNEEACADEMIQUE = ca.PERIODE LEFT JOIN classes cl ON cl.IDCLASSE = i.IDCLASSE LEFT JOIN niveau n ON n.IDNIVEAU = cl.NIVEAU LEFT JOIN caisses_banques cb ON cb.IDCAISSEBANQUE == ca.IDCAISSE LEFT JOIN personnels p ON p.IDPERSONNEL = ca.ENREGISTRERPAR LEFT JOIN personnels p2 ON p2.IDPERSONNEL = ca.PERCUPAR WHERE  eleve = :eleve  AND ca.PERIODE = :_anneecad ORDER BY ca.DATETRANSACTION DESC
+
+Time : 14:44:05
+SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it.
+
+
+Time : 14:44:02
+SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it.
+

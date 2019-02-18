@@ -1,0 +1,7 @@
+Time : 18:16:24
+SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it.
+
+
+Time : 18:16:20
+SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it.
+

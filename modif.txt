@@ -1,0 +1,8 @@
+INSERT INTO `ipw`.`droits` (`IDDROIT`, `CODEDROIT`, `LIBELLE`, `VERROUILLER`) 
+VALUES (NULL, '535', 'Saisie d''une observation après suppression d''une opération caisse', '0'), 
+(NULL, '536', 'Modification d''une observation après suppression d''une opération caisse', '0');
+
+ALTER TABLE `caisses_supprimees` ADD `OBSERVATIONS` TEXT NULL ;
+ALTER TABLE `caisses_supprimees` ADD `DATEOBSERVATION` DATE NULL ;
+
+-copier les icone observation.png et observationadd.png dans le dossier img/icons

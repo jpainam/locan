@@ -1,0 +1,60 @@
+PROCEDURE D'INSTALLATION
+
+1. Déployer l'application sous wamp/www ou xampp/htdocs.
+
+2. Définir le nom, le mot de passe et le server de la base de données dans le fichier config/config.php
+Importer la base de données
+
+3. Si le mot de passe de la base de données est différent de vide, éditer le fichier 
+wamp/apps/phpmyadmin4.1.14/config.inc.php et changer ces deux lignes
+
+$cfg['Servers'][$i]['auth_type'] = 'cookie';
+
+$cfg['Servers'][$i]['AllowNoPassword'] = false;
+
+4. Autoriser l'accès à phpmyadmin à partir d'une machine distante.
+# to give access to phpmyadmin from outside 
+# replace the lines
+#
+# Require local
+#
+# by
+#
+# Require all granted
+Remplacer les lignes Require local par Require all granted
+dans wamp/alias/phpmyadmin.conf
+
+<Directory "c:/wamp/apps/phpmyadmin3.4.5/">
+    Options Indexes FollowSymLinks MultiViews
+    AllowOverride all
+        Order Deny,Allow
+        Allow from all
+</Directory>
+
+5. Activer le mode rewrite de apache (accèder à l'icone de wamp, puis aller à apache/apache module 
+et cocher rewrire_module
+
+6. Pour activer la sauvegarde, ajouter le repertoire bin de mysql et php dans la variable 
+d'environnement. Et autoriser les exécutable bin/mysql.exe et bin/mysqdump dans le parefeu de window
+
+Saisir les commandes suivantes:
+
+$ mysql -u root -p
+Enter password:
+
+mysql> use mysql
+
+mysql> GRANT ALL ON *.* to root@'192.168.1.4' IDENTIFIED BY 'your-root-password'; 
+If you want to allow all clients to connect you may do following
+
+GRANT ALL ON *.* to root@’%’ IDENTIFIED BY ‘your-root-password';
+
+
+mysql> FLUSH PRIVILEGES;
+
+6. Ajouter C:\wamp\bin\php\php5.5.12 dans la variable d'environnement
+
+6. Redémarrer le server
+ 
+7. Lancer l'application en ouvrant le navigateur localhost/locan
+

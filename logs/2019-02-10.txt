@@ -1,0 +1,3 @@
+Time : 22:54:54
+SQLSTATE[22007]: Invalid datetime format: 1292 Incorrect datetime value: '' for column 'DATEFIN' at row 1
+Raw SQL : INSERT INTO connexions(COMPTE, DATEDEBUT, MACHINESOURCE, IPSOURCE, CONNEXION, DATEFIN, DECONNEXION) VALUE(:compte, :datedebut, :machine, :ip, :connexion, :datefin, :deconnexion)
