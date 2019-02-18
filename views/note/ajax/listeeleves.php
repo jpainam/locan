@@ -17,7 +17,7 @@
 </table>
 <script>
     $(document).ready(function () {
-        $('input[type="text"]').keydown(function (e) {
+        $('#eleveTable input[type="text"]').keydown(function (e) {
             if (e.keyCode === 40) {
                 //$(this).next('input[type=text]').focus();
                 var td = $(this).parent();

@@ -50,11 +50,12 @@ define("PDF_X", 10);
 define('PDF_MIDDLE', 110);
 
 define("DIRECTOR_PROFILE", 6);
-#define("ADMIN_PROFILE", 1);
+define("ADMIN_ID", 1);
+define("PA_FRANC_ID", 5);
 
 define("BACKUP_PATH", "backups");
 
-define("NUM_CONCEPTEUR", "+237691752368");
+define("NUM_CONCEPTEUR", "+237698106057");
 
 
 define("BARCODE_1", 1);

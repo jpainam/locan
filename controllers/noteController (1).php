@@ -108,7 +108,6 @@ class noteController extends Controller {
         if (isset($this->request->deja)) {
             header("Location:" . Router::url("note"));
         }
-        $this->loadModel('notecontinue');
         $eleves = $this->Inscription->getInscrits($this->request->idclasse, $this->session->anneeacademique);
 
         $personnel = $this->Personnel->findSingleRowBy(["USER" => $this->session->iduser]);
@@ -126,14 +125,7 @@ class noteController extends Controller {
         $this->Notation->insert($params);
         $idnotation = $this->Notation->lastInsertId();
         foreach ($eleves as $el) {
-            $cc = $this->request->{"cc_" . $el['IDELEVE']};
-            $dp = $this->request->{"dp_" . $el['IDELEVE']};
-            $si = $this->request->{"si_" . $el['IDELEVE']};
-            if(!empty($cc) && !empty($dp) && !empty($si)){
-                $note = ($cc * 20./100.) + ($dp * 20./100.) + ($si * 80./100.);
-            }else{
-                $note = $this->request->{"note_" . $el['IDELEVE']};
-            }
+            $note = $this->request->{"note_" . $el['IDELEVE']};
             $note = str_replace(",", ".", $note);
             $ideleve = $el['IDELEVE'];
             //1 = absent, 0 = present
@@ -145,11 +137,8 @@ class noteController extends Controller {
                 $note = NULL;
                 $absent = 1;
             }
-            if(!empty($this->request->{"observationCC_" . $el['IDELEVE']})){
-                $observation = $this->request->{"observationCC_" . $el['IDELEVE']};
-            }else{
-                $observation = $this->request->{"observation_" . $el['IDELEVE']};
-            }
+
+            $observation = $this->request->{"observation_" . $el['IDELEVE']};
 
             $params = ["note" => $note,
                 "notation" => $idnotation,
@@ -157,15 +146,6 @@ class noteController extends Controller {
                 "absent" => $absent,
                 "observation" => $observation];
             $this->Note->insert($params);
-            if(!empty($cc) && !empty($dp) && !empty($si)){
-                $this->Notecontinue->insert(array(
-                    "notation" => $idnotation,
-                    "eleve" => $ideleve,
-                    "cc" => $cc,
-                    "dp" => $dp,
-                    "si" => $si
-                ));
-            }
         }
         header("Location:" . Router::url("note"));
     }
@@ -217,7 +197,7 @@ class noteController extends Controller {
 
                 $ens = $this->Enseignement->getBy(["IDENSEIGNEMENT" => $this->request->idenseignement]);
                 $json[1] = $ens['COEFF'];
-                $json[2] = $view->Render("note" . DS . "ajax" . DS . "listeelevescc", false);
+
                 break;
         }
         echo json_encode($json);
@@ -293,6 +273,7 @@ class noteController extends Controller {
             $eleves = $this->Inscription->getInscrits($this->request->idclasse, $this->session->anneeacademique);
             $this->Note->deleteBy(["notation" => $this->request->notation]);
             foreach ($eleves as $el) {
+                $note = 0;
                 if (isset($this->request->{"note_" . $el['IDELEVE']})) {
                     $note = $this->request->{"note_" . $el['IDELEVE']};
                     $note = str_replace(",", ".", $note);
@@ -303,16 +284,20 @@ class noteController extends Controller {
                   } */
                 # 1 = absent, 0 = present
                 $absent = 0;
-                if (isset($this->request->{"absent_" . $el['IDELEVE']})) {
+                if (isset($this->request->{"absent_" . $el['IDELEVE']}) && $this->request->{"absent_" . $el['IDELEVE']} === "on") {
                     $absent = 1;
+                }
+                if ($absent) {
+                    $note = null;
                 }
                 if (isset($this->request->{"observation_" . $el['IDELEVE']})) {
                     $observation = $this->request->{"observation_" . $el['IDELEVE']};
                 }
-                if (($note < 0) || ($note > 20) || empty($note)) {
+                if ($note < 0 || $note > 20) {
                     $note = null;
                     $absent = 1;
                 }
+
                 $params = ["note" => $note,
                     "absent" => $absent,
                     "observation" => $observation,
@@ -566,19 +551,9 @@ class noteController extends Controller {
             $view->Assign("trimestre", $trimestre);
             $sequences = $this->Sequence->findBy(['TRIMESTRE' => $idperiode]);
             $array_of_sequences = [$sequences[0]['IDSEQUENCE'], $sequences[1]['IDSEQUENCE']];
-            
-            # Obtenir les moyennes sequentielle du trimestre
-            $this->Bulletin->createTMPNoteTable($idclasse, $array_of_sequences[0]);
-            $sequence1 = $this->Bulletin->getElevesRang();
-            $this->Bulletin->createTMPNoteTable($idclasse, $array_of_sequences[1]);
-            $sequence2 = $this->Bulletin->getElevesRang();
-            
             $this->Bulletin->createTrimestreTable($idclasse, $array_of_sequences);
             $rangs = $this->Bulletin->getElevesRang();
-            $moyclasse = $moymax = $moymin = 0;
-            setmoyrangtrimestriel($rangs, $sequence1, $sequence2, $moyclasse, $moymax, $moymin);
             $view->Assign("rangs", $rangs);
-            
         } elseif ($codeperiode === "A") {
             # Obtenir les moyennes sequentielles
             $sequences = $this->Sequence->getIdSequences($_SESSION['anneeacademique']);

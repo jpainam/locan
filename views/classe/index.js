@@ -53,7 +53,7 @@ function imprimer() {
     })).append($("<input>", {
         name: "type_impression",
         type: "hidden",
-        value: $("input[name=type_impression]").val()
+        value: $("input[name=type_impression]:checked").val()
     })).append($("<input>", {
         name: "idclasse",
         type: "hidden",

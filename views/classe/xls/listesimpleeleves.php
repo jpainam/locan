@@ -1,40 +1,65 @@
 <?php
+
+#https://phpspreadsheet.readthedocs.io/en/develop/topics/recipes
 require '../vendor/autoload.php';
 
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use PhpOffice\PhpSpreadsheet\IOFactory;
+
 $spreadsheet = new Spreadsheet();
 $spreadsheet->getDefaultStyle()->getFont()->setName("Verdana");
 $spreadsheet->getDefaultStyle()->getFont()->setSize(10);
 $sheet = $spreadsheet->getActiveSheet();
 
-$titre = 'LISTE DES ELEVES DE ' . $classe['NIVEAUHTML'] . ' ' . $classe['LIBELLE'];
-$sheet->setCellValue('A1', $titre);
+$sheet->setCellValue('A1', 'LISTE DES ELEVES DE ' . strip_tags($classe['NIVEAUHTML']));
+$sheet->mergeCells("A1:F1");
+$style = array(
+    'alignment' => array(
+        'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
+    )
+);
+$sheet->getStyle("A1")->applyFromArray($style);
+
+$sheet->setCellValue("A2", "N°")
+        ->setCellValue("B2", "Matricule")
+        ->setCellValue("C2", "Noms")
+        ->setCellValue("D2", "Prénoms")
+        ->setCellValue("E2", "Date Naiss")
+        ->setCellValue("F2", "Redoublant");
+$sheet->getStyle("A1:F2")->getFont()->setBold(true);
+$sheet->getStyle('A2:F2')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID);
+
+$sheet->getStyle('A2:F2')->getFill()->getStartColor()->setARGB('FFC4BD97');
+
 
 if (!is_array($array_of_redoublants)) {
     $array_of_redoublants = array();
 }
-$i = 1;
+$i = 3;
+$j = 1;
 foreach ($eleves as $el) {
     if (in_array($el['IDELEVE'], $array_of_redoublants)) {
         $redoublant = "OUI";
     } else {
         $redoublant = "NON";
     }
-    
-    $sheet->setCellValue('B' . $i, $el['MATRICULE'])
-            ->setCellValue('C' . $i, $el['NOM'])
-            ->setCellValue('D' . $i, $el['PRENOM'])
+
+    $sheet->setCellValue('A' . $i, $j)
+            ->setCellValue('B' . $i, $el['MATRICULE'])
+            ->setCellValue('C' . $i,  preg_replace('/(\'|&#0*39;)/', '\'', $el['NOM']))
+            ->setCellValue('D' . $i, preg_replace('/(\'|&#0*39;)/', '\'', $el['PRENOM']))
             ->setCellValue('E' . $i, date("d/m/Y", strtotime($el['DATENAISS'])))
             ->setCellValue('F' . $i, $redoublant);
     $i++;
+    $j++;
 }
-$sheet->mergeCells("A1:F1");
+
 setAutoSize($sheet, ["A", "B", "C", "D", "E", "F"]);
+$sheet->setTitle("Liste des Eleves");
 $spreadsheet->setActiveSheetIndex(0);
 header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-header('Content-Disposition: attachment;filename="rapport.xls"');
+header('Content-Disposition: attachment;filename="liste_des_eleves.xlsx"');
 header('Cache-Control: max-age=0');
 # If you're serving to IE 9, then the following may be needed
 header('Cache-Control: max-age=1');

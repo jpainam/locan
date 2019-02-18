@@ -25,7 +25,7 @@
             <thead><tr><th>Matricule</th><th>Noms et Pr&eacute;noms</th><th>Sexe</th><th>DateNaiss</th><th></th></tr></thead>
             <tbody>
                 <?php
-                $d = new DateFR();
+                /*$d = new DateFR();
                 foreach ($eleves as $el) {
                     echo "<tr><td>". $el['MATRICULE'] . "</td>"
                             . "<td style='cursor:pointer' onclick=\"ouvrirFiche(".$el['IDELEVE'].")\">" . $el['NOM'] . " " . $el['PRENOM'] . "</td>"
@@ -42,13 +42,13 @@
 
                     if (isAuth(521)) {
                         echo "&nbsp;&nbsp;<img style='cursor:pointer' src='" . img_delete() . "' "
-                        . " onclick=\"supprimerEleve(".$el['IDELEVE'].")\" />";
+                        . "onclick='supprimerEleve(".$el['IDELEVE'].")' />";
                     } else {
                         echo "&nbsp;&nbsp;<img style='cursor:pointer' src='" . img_delete_disabled() . "' />";
                     }
 
                     echo "</td></tr>";
-                }
+                }*/
                 ?>
             </tbody>
         </table>

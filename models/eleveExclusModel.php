@@ -36,15 +36,15 @@ class EleveExclusModel extends Model{
         return $this->query($query, $params);
     }
     public function selectAll() {
-        $annee = $_SESSION['anneeacademique'];
-        $query = "SELECT ee.*, i.*, cl.*, niv.*, el.* "
+        //$annee = $_SESSION['anneeacademique'];
+        $query = "SELECT ee.*, el.* "
                 . "FROM eleve_exclus ee "
                 . "INNER JOIN eleves el ON el.IDELEVE = ee.ELEVE "
-                . "INNER JOIN inscription i on i.IDELEVE = ee.ELEVE and i.ANNEEACADEMIQUE = :annee "
-                . "INNER JOIN classes cl ON cl.IDCLASSE = i.IDCLASSE "
-                . "INNER JOIN niveau niv ON niv.IDNIVEAU = cl.NIVEAU "
+                //. "INNER JOIN inscription i on i.IDELEVE = ee.ELEVE and i.ANNEEACADEMIQUE = :annee "
+                //. "INNER JOIN classes cl ON cl.IDCLASSE = i.IDCLASSE "
+                //. "INNER JOIN niveau niv ON niv.IDNIVEAU = cl.NIVEAU "
                 . "ORDER BY el.NOM ASC";
-        return $this->query($query, ["annee" => $annee]);
+        return $this->query($query);
     }
     public function getEleveExclusByClasse($idclasse){
         $annee = $_SESSION['anneeacademique'];

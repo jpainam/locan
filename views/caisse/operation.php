@@ -24,6 +24,9 @@ if (isAuth(532)) {
 } else {
     $_maxnbre = 2;
 }
+if(isAuth(537)){
+    $_maxnbre = $_maxnbre + 1;
+}
 ?>
 <div class="page">
     <div class="tabs" style="width: 100%">
@@ -34,7 +37,11 @@ if (isAuth(532)) {
                     <img border ="0" alt="" src="<?php echo SITE_ROOT . "public/img/icons/caisse.png"; ?>" />Totaux</a></li>
             <?php if (isAuth(532)) { ?>
                 <li id="tab3" class="noncourant"><a onclick="onglets(1, 3, <?php echo $_maxnbre; ?>);">
-                        <img border ="0" alt="" src="<?php echo SITE_ROOT . "public/img/icons/caisse.png"; ?>" />Op&eacute;rations supprim&eacute;es</a></li>
+                        <img border ="0" alt="" src="<?php echo SITE_ROOT . "public/img/icons/opsupprimees.png"; ?>" />Op&eacute;rations supprim&eacute;es</a></li>
+            <?php }
+            if (isAuth(537)) { ?>
+                <li id="tab4" class="noncourant"><a onclick="onglets(1, 4, <?php echo $_maxnbre; ?>);">
+                        <img border ="0" alt="" src="<?php echo SITE_ROOT . "public/img/icons/remise.png"; ?>" />Remises Effectu&eacute;es</a></li>
             <?php } ?>
         </ul>
     </div>
@@ -54,6 +61,9 @@ if (isAuth(532)) {
     </div>
     <div id="onglet3" class="onglet" style="display: none; height: 90%;">
         <?php echo $operationSupprimes; ?>
+    </div>
+     <div id="onglet4" class="onglet" style="display: none; height: 90%;">
+        <?php echo $operationsRemises; ?>
     </div>
 </div>
 <div class="navigation">

@@ -191,11 +191,11 @@ class caisseModel extends Model {
             $dateau = date("Y-m-d", strtotime("+1 day", strtotime($dateau)));
         }
 
-        $query = "SELECT IFNULL((SELECT SUM(MONTANT) FROM caisses WHERE VALIDE = 0 AND TYPE='C' AND DATETRANSACTION BETWEEN :datedu1 AND :dateau1 "
+        $query = "SELECT IFNULL((SELECT SUM(MONTANT) FROM caisses WHERE VALIDE = 0 AND DATETRANSACTION BETWEEN :datedu1 AND :dateau1 "
                 . "AND PERIODE = :anneeacad1), 0) AS MONTANTNONVALIDE, "
-                . "IFNULL((SELECT SUM(MONTANT) FROM caisses WHERE PERCUPAR IS NULL AND TYPE='C' AND DATETRANSACTION BETWEEN :datedu2 AND :dateau2 "
+                . "IFNULL((SELECT SUM(MONTANT) FROM caisses WHERE PERCUPAR IS NULL AND DATETRANSACTION BETWEEN :datedu2 AND :dateau2 "
                 . "AND PERIODE = :anneeacad2), 0) AS MONTANTNONPERCU, "
-                . "IFNULL((SELECT SUM(MONTANT) FROM caisses WHERE VALIDE = 1 AND TYPE='C' AND DATETRANSACTION BETWEEN :datedu3 AND :dateau3 "
+                . "IFNULL((SELECT SUM(MONTANT) FROM caisses WHERE VALIDE = 1 AND DATETRANSACTION BETWEEN :datedu3 AND :dateau3 "
                 . "AND PERIODE = :anneeacad3), 0) AS MONTANTVALIDE ";
 
         return $this->row($query, ["datedu1" => $datedu, "dateau1" => $dateau,
@@ -216,7 +216,7 @@ class caisseModel extends Model {
                 . "SELECT ca.DATETRANSACTION AS DATETR, ca.REFCAISSE AS REFCAISSE, ca.TYPE AS TYPE, "
                 . "ca.REFTRANSACTION AS REFTRANSACTION, "
                 . "ca.DESCRIPTION AS LIBELLE, IF(ca.TYPE = 'D', ca.MONTANT, '') AS DEBIT, "
-                . "IF(ca.TYPE = 'C' OR ca.TYPE = 'R', ca.MONTANT, '') AS CREDIT, n.NIVEAUHTML "
+                . "IF(ca.TYPE = 'C', ca.MONTANT, '') AS CREDIT, n.NIVEAUHTML "
                 . "FROM `" . $this->_table . "` ca "
                 . "INNER JOIN comptes_eleves co ON co.IDCOMPTE = ca.COMPTE AND co.ELEVE = :ideleve "
                 . "INNER JOIN inscription i ON i.IDELEVE = co.ELEVE AND i.ANNEEACADEMIQUE = ca.PERIODE "
@@ -253,18 +253,6 @@ class caisseModel extends Model {
     public function insertBordereauBanque($idcaisse, $bordereau){
         $query = "INSERT INTO caisses_banques(IDCAISSEBANQUE, BORDEREAUBANQUE) VALUES(:caisse, :bordereau)";
         return $this->query($query, ['caisse' => $idcaisse, "bordereau" => $bordereau]);
-    }
-    public function getOperationsRemises(){
-        $query = "SELECT ca.*, co.*, el.NOM as NOMEL, el.PRENOM AS PRENOMEL, p.NOM AS NOMENREG, p.PRENOM AS PRENOMENREG,"
-                . "p2.NOM AS NOMPERCU, p2.PRENOM AS PRENOMPERCU "
-                . "FROM `". $this->_table."` ca "
-                . "INNER JOIN comptes_eleves co ON co.IDCOMPTE = ca.COMPTE "
-                . "INNER JOIN eleves el ON el.IDELEVE = co.ELEVE "
-                . "LEFT JOIN personnels p ON p.IDPERSONNEL = ca.ENREGISTRERPAR "
-                . "LEFT JOIN personnels p2 ON p2.IDPERSONNEL = ca.PERCUPAR "
-                . "WHERE ca.PERIODE = :anneeacad AND ca.TYPE = 'R' AND ca.VALIDE = 1 "
-                . "ORDER BY ca.DATETRANSACTION DESC";
-        return $this->query($query, ["anneeacad" => $_SESSION['anneeacademique']]);
     }
 
 }

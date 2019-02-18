@@ -301,7 +301,9 @@ function verificationDoublons() {
             $("input[name='duplicate_validator']").val(c);
             if (c > 0) {
                 $(".exist-eleve").html("&nbsp;&nbsp;(Nom/Prénom déjà utilisés!)");
+                console.log(c);
             } else {
+                console.log("non " + c);
                 $(".exist-eleve").html("");
             }
         },

@@ -42,8 +42,9 @@
             <span class="text" style="width: 200px"><label>Ref. Transaction : </label>
                 <input type="text" name="reftransaction" /></span>
             <span class="select" style="width: 190px;"><label>Type de transaction : </label>
-                <select name="typetransaction" disabled="disabled">
+                <select name="typetransaction" <?php echo !isAuth(537) ? 'disabled="disabled"' : ''; ?>>
                     <option value="C" selected="selected">Cr&eacute;dit</option>
+                    <option value="R">R&eacute;mise</option>
                     <option value="D">D&eacute;bit</option>
                 </select>
             </span>

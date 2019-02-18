@@ -24,13 +24,42 @@
         </div>
     </div>
     <div class="page">
-        <div id="eleve-content">
-            <table class="dataTable" id="eleveTable">
-                <thead><th>Matricule</th><th>Noms & Pr&eacute;noms</th><th>Note</th>
-                <!-- th>Absent</th --><th>Non not&eacute;</th><th>Observations</th></thead>
-                <tbody>
-                </tbody></table>
+        <div class="tabs" style="width: 100%">
+            <ul>
+                <li id="tab1" class="courant">
+                    <a onclick="onglets(1, 1, 2);">
+                        <img border ="0" alt="" src="<?php echo SITE_ROOT . "public/img/icons/note.png"; ?>" />
+                        Harmonis&eacute;es
+                    </a>
+                </li>
+                <li id="tab2" class="noncourant">
+                    <a onclick="onglets(1, 2, 2);">
+                        <img border ="0" alt="" src="<?php echo SITE_ROOT . "public/img/icons/activite.png"; ?>" />
+                        Contr&ocirc;les continus
+                    </a>
+                </li>
+            </ul>
         </div>
+        <div id="onglet1" class="onglet" style="display: block;height: 95%">
+            <div id="eleve-content">
+                <table class="dataTable" id="eleveTable">
+                    <thead><th>Matricule</th><th>Noms & Pr&eacute;noms</th><th>Note</th>
+                    <!-- th>Absent</th --><th>Non not&eacute;</th><th>Observations</th></thead>
+                    <tbody>
+                    </tbody></table>
+            </div>
+        </div>
+        <div id="onglet2" class="onglet" style="display: none;height: 95%">
+            <div id="eleve-cc">
+                <table class="dataTable" id="tableNotes">
+                    <thead><th>Matricule</th><th>Noms & Pr&eacute;noms</th>
+                    <th>CC</th><th>DP</th><th>SI</th>
+                    <th>Non not&eacute;</th><th>Observations</th></thead>
+                    <tbody>
+                    </tbody></table>
+            </div>
+        </div>
+
     </div>
     <div class="navigation">
         <div class="editions" style="float: left">

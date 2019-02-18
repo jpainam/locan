@@ -43,7 +43,15 @@ foreach($operations as $op){
             
             # $type = ($op['TYPE'] == "C" ? "CREDIT" : "DEBIT");
             $type = $op['TYPE'];
-            echo "<tr><td>" . $d->getDate() . '-' . $d->getMois(3) . "-" . $d->getYear(2) . "</td>"
+            if($type == 'R' && $op['VALIDE'] == 1){
+                continue;
+            }
+            if ($type == 'R'){
+                echo "<tr style='background-color:orange !important'>";
+            }else{
+                echo "<tr>";
+            }
+            echo "<td>" . $d->getDate() . '-' . $d->getMois(3) . "-" . $d->getYear(2) . "</td>"
             . "<td>" . $op['NOMEL'] . ' ' . $op['PRENOMEL'] . ".</td><td>" . $op['REFCAISSE'] . "</td>"
             . '<td>' . $op['DESCRIPTION'] . '</td><td align="right">' . moneyString($op['MONTANT']) . "</td>";
             if ($op['VALIDE'] == 0) {

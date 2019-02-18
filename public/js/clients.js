@@ -1,90 +1,102 @@
 $(document).ready(function () {
-    $("select[name=comboClasses]").change(chargerComptes);
-    $("select[name=comboComptes]").change(chargerPhoto);
+    $("#datedebut").datepicker({
+        defaultDate: "+1w",
+        changeMonth: true,
+        changeYear: true,
+        onClose: function (selectedDate) {
+            $("#datefin").datepicker("option", "minDate", selectedDate);
+        }
+    });
+    $("#datedebut").datepicker("setDate", "-60d");
+    $("#datefin").datepicker({
+        defaultDate: "+1w",
+        changeMonth: true,
+        changeYear: true,
+        onClose: function (selectedDate) {
+            $("#datedebut").datepicker("option", "maxDate", selectedDate);
+        }
+    });
+    $("#datefin").datepicker("setDate", new Date());
+    $("input[name=datedebut], input[name=datefin]").change(filtrerOperation);
+
+    if (!$.fn.DataTable.isDataTable("#tableTotaux")) {
+        $("#tableTotaux").DataTable({
+            bInfo: false,
+            paging: false,
+            searching: false
+        });
+    }
+
+    $("select[name=typeoperation]").change(filtrerOperation);
 });
 
-var chargerComptes = function () {
-    if ($("select[name=comboClasses]").val() === "") {
-        return;
-    }
+var filtrerOperation = function () {
+
     $.ajax({
-        url: "./ajaxsaisie",
+        url: "./ajaxoperation",
         type: "POST",
         dataType: "json",
         data: {
-            idclasse: $("select[name=comboClasses]").val(),
-            action: "chargerComptes"
+            datedebut: $("input[name=datedebut]").val(),
+            datefin: $("input[name=datefin]").val(),
+            filtre: $("select[name=typeoperation]").val(),
+            action: "filtrerOperation"
         },
         success: function (result) {
-            $("select[name=comboComptes]").html(result[0]);
+            $("#onglet1").html(result[0]);
+            $("#onglet2").html(result[1]);
         },
         error: function (xhr, status, error) {
-            alert("Une erreur s' est produite " + xhr + " " + error);
+            alert("Une erreur s'est produite " + xhr + " " + error);
         }
     });
-
 };
 
-var chargerPhoto = function () {
-    removeRequiredFields([$("select[name=comboClasses]")]);
-
-    if ($("select[name=comboJournals]").val() === "") {
-        addRequiredFields([$("select[name=comboClasses]")]);
-        alertWebix("Veuillez d'abord choisir une classe");
-        return;
-    }
-    if ($("select[name=comboComptes]").val() === "") {
-        $(".photo-eleve").attr("src", "");
-        return;
-    }
-
+function percuRecu(_idcaisse) {
     $.ajax({
-        url: "./ajaxsaisie",
+        url: "./ajaxoperation",
         type: "POST",
         dataType: "json",
         data: {
-            idcompte: $("select[name=comboComptes]").val(),
-            action: "chargerPhoto"
+            action: "percuRecu",
+            idcaisse: _idcaisse,
+            filtre: $("select[name=typeoperation]").val(),
+            datedebut: $("input[name=datedebut]").val(),
+            datefin: $("input[name=datefin]").val()
         },
         success: function (result) {
-            $(".photo-eleve").attr("src", result[0]);
-            $("input[name=idjournal]").val(result[1]);
+            $("#onglet1").html(result[0]);
+            $("#onglet2").html(result[1]);
         },
         error: function (xhr, status, error) {
-            alert("Une erreur s' est produite " + xhr + " " + error);
+            alert("Une erreur s'est produite " + xhr + " " + error);
         }
     });
-
-};
-
-function ValiderCaisse() {
-    var frm = $("form[name=frmcaisse]");
-    removeRequiredFields([$("input[name=reftransaction]"), $("select[name=typetransaction]"),
-        $("input[name=description]"), $("input[name=montant]"),
-        $("select[name=comboClasses]"), $("select[name=comboComptes]")]);
-
-    if ($("input[name=reftransaction]").val() === "" || $("select[name=typetransaction]").val() === "" ||
-            $("input[name=description]").val() === "" || $("input[name=montant]").val() === ""
-            || $("select[name=comboClasses]").val() === "" || $("select[name=comboComptes]").val() === "") {
-        addRequiredFields([$("input[name=reftransaction]"), $("select[name=typetransaction]"),
-            $("input[name=description]"), $("input[name=montant]"), $("select[name=comboClasses]"),
-            $("select[name=comboComptes]")]);
-        alertWebix("Veuillez remplir les champs obligatoires");
-        return;
-    }
-    $("input[name=idcompte]").val($("select[name=comboComptes]").val());
-    frm.submit();
 }
+function validerOperation(_idcaisse) {
+    $.ajax({
+        url: "./ajaxoperation",
+        type: "POST",
+        dataType: "json",
+        data: {
+            action: "validerOperation",
+            idcaisse: _idcaisse,
+            filtre: $("select[name=typeoperation]").val(),
+            datedebut: $("input[name=datedebut]").val(),
+            datefin: $("input[name=datefin]").val()
+        },
+        success: function (result) {
+            $("#onglet1").html(result[0]);
+            $("#onglet2").html(result[1]);
 
+        },
+        error: function (xhr, status, error) {
+            alert("Une erreur s'est produite " + xhr + " " + error);
+        }
+    });
+}
 function imprimer() {
     if ($("select[name=code_impression]").val() === "") {
-        return;
-    }
-    removeRequiredFields([$("select[name=comboComptes]")]);
-    if ($("select[name=comboComptes]").val() === "") {
-        addRequiredFields([$("select[name=comboComptes]")]);
-        $("select[name=code_impression]")[0].selectedIndex = 0;
-        alertWebix("Veuillez d'abord choisir un compte");
         return;
     }
     var frm = $("<form>", {
@@ -95,10 +107,12 @@ function imprimer() {
         name: "code",
         type: "hidden",
         value: $("select[name=code_impression]").val()
-    })).append($("<input>", {
-        name: "idcompte",
-        type: "hidden",
-        value: $("select[name=comboComptes]").val()
     })).appendTo("body");
     frm.submit();
+}
+function supprimerCaisse($idcaisse) {
+    var _ok = confirm('Etes-vous sûr de vouloir supprimer cette entrée de caisse?');
+    if (_ok) {
+        document.location = "./delete/" + $idcaisse;
+    }
 }

@@ -33,10 +33,15 @@ class caisseController extends Controller {
         # Generer la refcaisse en function du time
         //$journal = $this->Journal->get($this->request->idjournal);
         //$refcaisse = $journal['CODE'].'000'.time();
-        $refcaisse = "JE" . '000' . time();
+        $typetransaction = empty($this->request->typetransaction) ? "C" : $this->request->typetransaction;
+        if($typetransaction == 'R'){
+            $refcaisse = "RE" . '000' . time();
+        }else{
+            $refcaisse = "JE" . '000' . time();
+        }
 
         $params = ["compte" => $this->request->idcompte,
-            "type" => empty($this->request->typetransaction) ? "C" : $this->request->typetransaction,
+            "type" => $typetransaction,
             "reftransaction" => $this->request->reftransaction,
             "refcaisse" => $refcaisse,
             "description" => $this->request->description,
@@ -256,6 +261,11 @@ class caisseController extends Controller {
         $view->Assign("operations", $operations);
         $operationSupprimes = $view->Render("caisse" . DS . "ajax" . DS . "operationsupprimee", false);
 
+        $operations = $this->Caisse->getOperationsRemises();
+        $view->Assign('operations', $operations);
+        $operationsRemises = $view->Render('caisse' . DS . 'ajax' . DS . 'operationRemise', false);
+        $view->Assign('operationsRemises', $operationsRemises);
+        
         $view->Assign("operationSupprimes", $operationSupprimes);
         $content = $view->Render("caisse" . DS . "operation", false);
         $this->Assign("content", $content);
@@ -361,8 +371,13 @@ class caisseController extends Controller {
         $json = array();
         $view = new View();
         $action = $this->request->action;
+        $type = $this->request->type;
         $idcaisse = $this->request->idcaisse;
-        $caisse = $this->Caissesupprimee->get($idcaisse);
+        if($type == 'R'){
+            $caisse = $this->Caisse->get($idcaisse);
+        }else{
+            $caisse = $this->Caissesupprimee->get($idcaisse);
+        }
         switch ($action) {
             case "getobservation":
                 $json[0] = empty($caisse['DATEOBSERVATION']) ? date("Y-m-d", time()) : $caisse['DATEOBSERVATION'];
@@ -388,10 +403,17 @@ class caisseController extends Controller {
                         }
                     }
                     if ($ok) {
-                        $this->Caissesupprimee->update($params, ["idcaisse" => $idcaisse]);
+                        if($type == 'R'){
+                            $this->Caisse->update($params, ['idcaisse' => $idcaisse]);
+                        }else{
+                            $this->Caissesupprimee->update($params, ["idcaisse" => $idcaisse]);
+                        }
                         $operations = $this->Caissesupprimee->selectAll();
                         $view->Assign("operations", $operations);
                         $json[1] = $view->Render("caisse" . DS . "ajax" . DS . "operationsupprimee", false);
+                        $operations = $this->Caisse->getOperationsRemises();
+                        $view->Assign("operations", $operations);
+                        $json[2] = $view->Render("caisse" . DS . "ajax" . DS . "operationRemise", false);
                     }
                 }
                 break;

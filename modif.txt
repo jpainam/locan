@@ -6,3 +6,9 @@ ALTER TABLE `caisses_supprimees` ADD `OBSERVATIONS` TEXT NULL ;
 ALTER TABLE `caisses_supprimees` ADD `DATEOBSERVATION` DATE NULL ;
 
 -copier les icone observation.png et observationadd.png dans le dossier img/icons
+
+
+INSERT INTO `droits` (`IDDROIT`, `CODEDROIT`, `LIBELLE`, `VERROUILLER`) 
+VALUES (NULL, '537', 'Remise caisse effectuée pour certains élèves', '0');
+
+ALTER TABLE `caisses` ADD `DATEOBSERVATION` VARCHAR(250) NULL DEFAULT NULL AFTER `PERIODE`;

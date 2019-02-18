@@ -44,7 +44,7 @@ class connexionController extends Controller {
         $anneeAcad = $this->Anneeacademique->selectAll();
         $month = intval(date("m", time()));
 
-        if ($month >= 1 && $month <= 7) {
+        if ($month >= 1 && $month <= 6) {
             $year2 = intval(date("Y", time()));
             $year1 = intval(date("Y", time())) - 1;
         } else {

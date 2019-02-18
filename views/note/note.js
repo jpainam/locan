@@ -19,6 +19,20 @@ $(document).ready(function () {
                 {"width": "30%"}
             ]
         });
+        $("#tableNotes").DataTable({
+            bInfo: false,
+            paging: false,
+            searching: false,
+            columns: [
+                {"width": "10%"},
+                null,
+                {"width": "7%"},
+                {"width": "7%"},
+                {"width": "7%"},
+                {"width": "10%"},
+                {"width": "20%"}
+            ]
+        });
     }
     $.fn.setCursorPosition = function (pos) {
         this.each(function (index, elem) {
@@ -105,6 +119,7 @@ chargerEleves = function () {
         success: function (result) {
             $("#eleve-content").html(result[0]);
             $("input[name=coeff]").val(result[1]);
+            $("#eleve-cc").html(result[2]);
         },
         error: function (xhr, status, error) {
             alert("Une erreur s'est produite " + xhr + " " + error);
