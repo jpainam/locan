@@ -254,5 +254,48 @@ class notationModel extends Model {
         }
         return $this->query($query, $params);
     }
+    
+    # seq.LIBELLE AS SEQUENCELIBELLE WHERE seq.IDSEQUENCE = :idsequence1
+    public function getNotesNonSaisiesByPeriode($idsequence){
+        $query = "SELECT e.*, m.*, m.LIBELLE AS MATIERELIBELLE, "
+                . "cl.*, pers.* "
+                . "FROM enseignements e "
+                . "INNER JOIN matieres m ON m.IDMATIERE = e.MATIERE "
+                . "INNER JOIN classes cl ON cl.IDCLASSE = e.CLASSE "
+                . "INNER JOIN personnels pers ON pers.IDPERSONNEL = e.PROFESSEUR "
+                . "WHERE cl.ANNEEACADEMIQUE = :anneeacad "
+                . "AND e.IDENSEIGNEMENT NOT IN ("
+                . "SELECT ENSEIGNEMENT FROM notations n "
+                . "WHERE n.SEQUENCE = :idsequence2)";
+        return $this->query($query, ["anneeacad" => $_SESSION['anneeacademique'], 
+             "idsequence2" => $idsequence]);
+    }
+    public function getNotesNonSaisiesByClasse($idclasse){
+           $query = "SELECT e.*, m.*, m.LIBELLE AS MATIERELIBELLE, cl.*, pers.* "
+                . "FROM enseignements e "
+                . "INNER JOIN matieres m ON m.IDMATIERE = e.MATIERE "
+                . "INNER JOIN classes cl ON cl.IDCLASSE = e.CLASSE "
+                . "INNER JOIN personnels pers ON pers.IDPERSONNEL = e.PROFESSEUR "
+                . "WHERE cl.IDCLASSE = :idclasse AND e.IDENSEIGNEMENT NOT IN ("
+                . "SELECT ENSEIGNEMENT FROM notations n "
+                   . "INNER JOIN sequences seq ON seq.IDSEQUENCE = n.SEQUENCE "
+                   . "INNER JOIN trimestres tr ON tr.IDTRIMESTRE = seq.TRIMESTRE "
+                   . "WHERE tr.PERIODE = :anneeacad)";
+        return $this->query($query, ["anneeacad" => $_SESSION['anneeacademique'], "idclasse" => $idclasse]);
+    }
+    
+    public function getNotesNonSaisiesByClasseByPeriode($idclasse, $idsequence){
+         $query = "SELECT e.*, m.*, m.LIBELLE AS MATIERELIBELLE, cl.*, pers.*, seq.LIBELLE AS SEQUENCELIBELLE "
+                . "FROM enseignements e "
+                 . "LEFT JOIN sequences seq ON seq.IDSEQUENCE = :idsequence1 "
+                . "INNER JOIN matieres m ON m.IDMATIERE = e.MATIERE "
+                . "INNER JOIN classes cl ON cl.IDCLASSE = e.CLASSE "
+                . "INNER JOIN personnels pers ON pers.IDPERSONNEL = e.PROFESSEUR "
+                . "WHERE cl.IDCLASSE = :idclasse AND e.IDENSEIGNEMENT NOT IN ("
+                . "SELECT ENSEIGNEMENT FROM notations n "
+                . "WHERE n.SEQUENCE = :idsequence2 )";
+        return $this->query($query, ["idclasse" => $idclasse, 
+            'idsequence1' => $idsequence, 'idsequence2' => $idsequence]);
+    }
 
 }

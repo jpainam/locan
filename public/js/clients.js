@@ -1,50 +1,22 @@
 $(document).ready(function () {
-    $("#datedebut").datepicker({
-        defaultDate: "+1w",
-        changeMonth: true,
-        changeYear: true,
-        onClose: function (selectedDate) {
-            $("#datefin").datepicker("option", "minDate", selectedDate);
-        }
-    });
-    $("#datedebut").datepicker("setDate", "-60d");
-    $("#datefin").datepicker({
-        defaultDate: "+1w",
-        changeMonth: true,
-        changeYear: true,
-        onClose: function (selectedDate) {
-            $("#datedebut").datepicker("option", "maxDate", selectedDate);
-        }
-    });
-    $("#datefin").datepicker("setDate", new Date());
-    $("input[name=datedebut], input[name=datefin]").change(filtrerOperation);
-
-    if (!$.fn.DataTable.isDataTable("#tableTotaux")) {
-        $("#tableTotaux").DataTable({
-            bInfo: false,
-            paging: false,
-            searching: false
-        });
-    }
-
-    $("select[name=typeoperation]").change(filtrerOperation);
+    $("select[name=comboClasses]").change(chargerNotation);
+    $("select[name=comboPeriodes]").change(chargerNotation);
 });
 
-var filtrerOperation = function () {
 
+chargerNotation = function () {
     $.ajax({
-        url: "./ajaxoperation",
+        url: "./note/ajaxindex",
         type: "POST",
         dataType: "json",
         data: {
-            datedebut: $("input[name=datedebut]").val(),
-            datefin: $("input[name=datefin]").val(),
-            filtre: $("select[name=typeoperation]").val(),
-            action: "filtrerOperation"
+            action: "chargerNotation",
+            idclasse: $("select[name=comboClasses]").val(),
+            idperiode: $("select[name=comboPeriodes]").val()
         },
         success: function (result) {
-            $("#onglet1").html(result[0]);
-            $("#onglet2").html(result[1]);
+            $("#notes-content").html(result[0]);
+            $("#notes-non-saisies-content").html(result[1]);
         },
         error: function (xhr, status, error) {
             alert("Une erreur s'est produite " + xhr + " " + error);
@@ -52,73 +24,60 @@ var filtrerOperation = function () {
     });
 };
 
-function percuRecu(_idcaisse) {
-    $.ajax({
-        url: "./ajaxoperation",
-        type: "POST",
-        dataType: "json",
-        data: {
-            action: "percuRecu",
-            idcaisse: _idcaisse,
-            filtre: $("select[name=typeoperation]").val(),
-            datedebut: $("input[name=datedebut]").val(),
-            datefin: $("input[name=datefin]").val()
-        },
-        success: function (result) {
-            $("#onglet1").html(result[0]);
-            $("#onglet2").html(result[1]);
-        },
-        error: function (xhr, status, error) {
-            alert("Une erreur s'est produite " + xhr + " " + error);
-        }
-    });
-}
-function validerOperation(_idcaisse) {
-    $.ajax({
-        url: "./ajaxoperation",
-        type: "POST",
-        dataType: "json",
-        data: {
-            action: "validerOperation",
-            idcaisse: _idcaisse,
-            filtre: $("select[name=typeoperation]").val(),
-            datedebut: $("input[name=datedebut]").val(),
-            datefin: $("input[name=datefin]").val()
-        },
-        success: function (result) {
-            $("#onglet1").html(result[0]);
-            $("#onglet2").html(result[1]);
-
-        },
-        error: function (xhr, status, error) {
-            alert("Une erreur s'est produite " + xhr + " " + error);
-        }
-    });
-}
-function imprimer() {
-    if ($("select[name=code_impression]").val() === "") {
-        return;
+function supprimerNotation(idnotation) {
+    if (confirm("Etes vous sur de vouloir supprimer ces notes?")) {
+        $("<form>", {
+            action: "notation/delete/" + idnotation,
+            method: "post"
+        }).appendTo('body').submit();
     }
+}
+
+function editNotation(idnotation) {
+    $("<form>", {
+        action: "note/edit/" + idnotation,
+        method: "post"
+    }).appendTo('body').submit();
+}
+
+function impression(_id) {
     var frm = $("<form>", {
-        action: "./imprimer",
+        action: "./note/imprimer",
         target: "_blank",
         method: "post"
     }).append($("<input>", {
         name: "code",
         type: "hidden",
-        value: $("select[name=code_impression]").val()
+        value: "0004"
+    })).append($("<input>", {
+        name: "idnotation",
+        type: "hidden",
+        value: _id
     })).appendTo("body");
+
     frm.submit();
 }
-function supprimerCaisse($idcaisse) {
-    var _ok = confirm('Etes-vous sûr de vouloir supprimer cette entrée de caisse?');
-    if (_ok) {
-        document.location = "./delete/" + $idcaisse;
-    }
-}
-function supprimerMoratoire($idmoratoire) {
-    var _ok = confirm('Etes-vous sûr de vouloir supprimer ce moratoire ?');
-    if (_ok) {
-        document.location = "./deletemoratoire/" + $idmoratoire;
-    }
+function notifierNotation(_idnotation) {
+    $.ajax({
+        url: "./note/ajaxindex",
+        type: "POST",
+        dataType: "json",
+        data: {
+            action: "notifierNotation",
+            idnotation: _idnotation,
+            idenseignement: $("select[name=comboEnseignements]").val(),
+            idperiode: $("select[name=comboPeriodes]").val()
+        },
+        success: function (result) {
+            $("#notes-content").html(result[0]);
+            if (result[1] === 1) {
+                alertWebix("Messages de notification envoy&eacute; avec succ&egrave;s");
+            } else {
+                alertWebix("Une erreur est survenue lors de l'envoie des SMS de notification");
+            }
+        },
+        error: function (xhr, status, error) {
+            alert("Une erreur s'est produite " + xhr + " " + error);
+        }
+    });
 }

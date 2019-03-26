@@ -16,6 +16,7 @@ chargerNotation = function () {
         },
         success: function (result) {
             $("#notes-content").html(result[0]);
+            $("#notes-non-saisies-content").html(result[1]);
         },
         error: function (xhr, status, error) {
             alert("Une erreur s'est produite " + xhr + " " + error);

@@ -1,0 +1,35 @@
+Time : 07:59:53
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'e.MATIERE' in 'on clause'
+Raw SQL : SELECT e.*, m.*, m.LIBELLE AS MATIERELIBELLE, cl.*, pers.* FROM enseignements e, sequences seq INNER JOIN matieres m ON m.IDMATIERE = e.MATIERE INNER JOIN classes cl ON cl.IDCLASSE = e.CLASSE INNER JOIN personnels pers ON pers.IDPERSONNEL = e.PROFESSEUR WHERE cl.IDCLASSE = :idclasse AND e.IDENSEIGNEMENT NOT IN (SELECT ENSEIGNEMENT FROM notations n WHERE n.SEQUENCE = :idsequence)
+
+Time : 07:49:54
+SQLSTATE[HY093]: Invalid parameter number: parameter was not defined
+Raw SQL : SELECT e.*, m.*, m.CODE AS CODEMATIERE, cl.*, pers.* FROM enseignements e INNER JOIN matieres m ON m.IDMATIERE = e.MATIERE INNER JOIN classes cl ON cl.IDCLASSE = e.CLASSE INNER JOIN personnels pers ON pers.IDPERSONNEL = e.PROFESSEUR WHERE cl.ANNEEACADEMIQUE = :anneeacad AND e.IDENSEIGNEMENT NOT IN (SELECT ENSEIGNEMENT FROM notations n WHERE n.SEQUENCE = :idsequence2)
+
+Time : 07:49:09
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'seq.IDSEQUENCE' in 'where clause'
+Raw SQL : SELECT e.*, m.*, m.CODE AS CODEMATIERE, cl.*, pers.* FROM enseignements e INNER JOIN matieres m ON m.IDMATIERE = e.MATIERE INNER JOIN classes cl ON cl.IDCLASSE = e.CLASSE INNER JOIN personnels pers ON pers.IDPERSONNEL = e.PROFESSEUR WHERE seq.IDSEQUENCE = :idsequence1 AND cl.ANNEEACADEMIQUE = :anneeacad AND e.IDENSEIGNEMENT NOT IN (SELECT ENSEIGNEMENT FROM notations n WHERE n.SEQUENCE = :idsequence2)
+
+Time : 07:48:28
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'e.MATIERE' in 'on clause'
+Raw SQL : SELECT e.*, m.*, m.CODE AS CODEMATIERE, cl.*, pers.*, seq.LIBELLE AS SEQUENCELIBELLE FROM enseignements e, sequences seq INNER JOIN matieres m ON m.IDMATIERE = e.MATIERE INNER JOIN classes cl ON cl.IDCLASSE = e.CLASSE INNER JOIN personnels pers ON pers.IDPERSONNEL = e.PROFESSEUR WHERE seq.IDSEQUENCE = :idsequence1 AND cl.ANNEEACADEMIQUE = :anneeacad AND e.IDENSEIGNEMENT NOT IN (SELECT ENSEIGNEMENT FROM notations n WHERE n.SEQUENCE = :idsequence2)
+
+Time : 07:46:45
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'e.MATIERE' in 'on clause'
+Raw SQL : SELECT e.*, m.*, m.CODE AS CODEMATIERE, cl.*, pers.*, seq.LIBELLE AS SEQUENCELIBELLE FROM enseignements e, sequences seq INNER JOIN matieres m ON m.IDMATIERE = e.MATIERE INNER JOIN classes cl ON cl.IDCLASSE = e.CLASSE INNER JOIN personnels pers ON pers.IDPERSONNEL = e.PROFESSEUR WHERE seq.IDSEQUENCE = :idsequence1 AND cl.ANNEEACADEMIQUE = :anneeacad AND e.IDENSEIGNEMENT NOT IN (SELECT ENSEIGNEMENT FROM notations n WHERE n.SEQUENCE = :idsequence2)
+
+Time : 07:46:00
+SQLSTATE[42S22]: Column not found: 1054 Unknown column 'e.IDENSEIGNANT' in 'IN/ALL/ANY subquery'
+Raw SQL : SELECT e.*, m.*, m.CODE AS CODEMATIERE, cl.*, pers.*, seq.LIBELLE AS SEQUENCELIBELLE FROM enseignements e, sequences seq INNER JOIN matieres m ON m.IDMATIERE = e.MATIERE INNER JOIN classes cl ON cl.IDCLASSE = e.CLASSE INNER JOIN personnels pers ON pers.IDPERSONNEL = e.PROFESSEUR WHERE seq.IDSEQUENCE = :idsequence1 AND cl.ANNEEACADEMIQUE = :anneeacad AND e.IDENSEIGNANT NOT IN (SELECT ENSEIGNEMENT FROM notations n WHERE n.SEQUENCE = :idsequence2)
+
+Time : 07:45:35
+SQLSTATE[42S02]: Base table or view not found: 1051 Unknown table 'pers'
+Raw SQL : SELECT e.*, m.*, m.CODE AS CODEMATIERE, cl.*, pers.*, seq.LIBELLE AS SEQUENCELIBELLE FROM enseignements e, sequences seq INNER JOIN matieres m ON m.IDMATIERE = e.MATIERE INNER JOIN classes cl ON cl.IDCLASSE = e.CLASSE INNER JOIN personnels ON pers.IDPERSONNEL = e.PROFESSEUR WHERE seq.IDSEQUENCE = :idsequence1 AND cl.ANNEEACADEMIQUE = :anneeacad AND e.IDENSEIGNANT NOT IN (SELECT ENSEIGNEMENT FROM notations n WHERE n.SEQUENCE = :idsequence2)
+
+Time : 07:44:51
+SQLSTATE[42S02]: Base table or view not found: 1051 Unknown table 'pers'
+Raw SQL : SELECT e.*, m.*, m.CODE AS CODEMATIERE, cl.*, pers.*, seq.LIBELLE AS SEQUENCELIBELLE FROM enseignements e, sequences seq INNER JOIN matieres m ON m.IDMATIERE = e.MATIERE INNER JOIN classes cl ON cl.IDCLASSE = e.CLASSE INNER JOIN personnels ON pers.IDPERSONNEL = e.PROFESSEUR WHERE seq.IDSEQUENCE = :idsequence1 AND cl.ANNEEACADEMIQUE = :anneeacad AND e.IDENSEIGNANT NOT IN (SELECT ENSEIGNEMENT FROM notations n WHERE n.SEQUENCE = :idsequence2)
+
+Time : 07:44:22
+SQLSTATE[42S02]: Base table or view not found: 1051 Unknown table 'pers'
+Raw SQL : SELECT e.*, m.*, m.CODE AS CODEMATIERE, cl.*, pers.*, seq.LIBELLE AS SEQUENCELIBELLE FROM enseignements e, sequences seq INNER JOIN matieres m ON m.IDMATIERE = e.MATIERE INNER JOIN classes cl ON cl.IDCLASSE = e.CLASSE INNER JOIN personnels ON pers.IDPERSONNEL = e.PROFESSEUR WHERE seq.IDSEQUENCE = :idsequence1 AND cl.ANNEEACADEMIQUE = :anneeacad AND e.IDENSEIGNANT NOT IN (SELECT ENSEIGNEMENT FROM notations n WHERE n.SEQUENCE = :idsequence2)

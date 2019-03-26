@@ -59,10 +59,14 @@ class noteController extends Controller {
         # $notations = $this->Notation->selectAll();
         $notations = $this->Notation->findBy(["SEQUENCE" => 1]);
         $view->Assign("notations", $notations);
-
         $tableNotes = $view->Render("note" . DS . "ajax" . DS . "tableNotes", false);
-
         $view->Assign("tableNotes", $tableNotes);
+        
+        $notesnonsaisies = array();
+        $view->Assign("notesnonsaisies", $notesnonsaisies);
+        $tableNotesNonSaisies = $view->Render("note" . DS . "ajax" . DS . "tableNotesNonSaisies", false);
+        $view->Assign("tableNotesNonSaisies", $tableNotesNonSaisies);
+        
         $content = $view->Render("note" . DS . "index", false);
         $this->Assign("content", $content);
     }
@@ -88,17 +92,23 @@ class noteController extends Controller {
             case "chargerNotation":
                 $idclasse = $this->request->idclasse;
                 $idperiode = $this->request->idperiode;
+                $notesnonsaisies = array();
                 if (empty($idclasse) && empty($idperiode)) {
                     $notations = $this->Notation->selectAll();
                 } elseif (empty($idclasse) && !empty($idperiode)) {
                     $notations = $this->Notation->getNotationsByPeriode($idperiode);
+                    #$notesnonsaisies = $this->Notation->getNotesNonSaisiesByPeriode($idperiode);
                 } elseif (!empty($idclasse) && empty($idperiode)) {
                     $notations = $this->Notation->getNotationsByClasse($idclasse);
+                    #$notesnonsaisies = $this->Notation->getNotesNonSaisiesByClasse($idclasse);
                 } else {
                     $notations = $this->Notation->getNotationsByClasseByPeriode($idclasse, $idperiode);
+                    $notesnonsaisies = $this->Notation->getNotesNonSaisiesByClasseByPeriode($idclasse, $idperiode);
                 }
                 $view->Assign("notations", $notations);
+                $view->Assign("notesnonsaisies", $notesnonsaisies);
                 $json[0] = $view->Render("note" . DS . "ajax" . DS . "tableNotes", false);
+                $json[1] = $view->Render("note" . DS . "ajax" . DS . "tableNotesNonSaisies", false);
                 break;
         }
         echo json_encode($json);
