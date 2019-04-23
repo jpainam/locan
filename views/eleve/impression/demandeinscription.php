@@ -13,6 +13,11 @@ $pdf->setFont("Times", '', 13);
 $titre = '<p style="text-align:center"><b>FICHE DE DEMANDE D\'INSCRIPTION<br/>Ann&eacute;e scolaire ' . $anneescolaire . "</b></p>";
 $pdf->WriteHTMLCell(0, 5, 30, $y, $titre);
 $pdf->WriteHTMLCell(0, 5, 11, $y + 20, '<b style="text-decoration:underline">Informations de l\'&eacute;l&egrave;ve</b>');
+if(isset($classe['LIBELLE'])){
+    $pdf->WriteHTMLCell(0, 5, 85, 60, '<b>Classe: ' .  $classe['NIVEAUHTML']. ' '. $classe['LIBELLE'] . '</b>');
+}else{
+    $pdf->WriteHTMLCell(0, 5, 85, 60, '<b>Classe: </b>');
+}
 
 $d = new DateFR($eleve['DATENAISS']);
 $corps = '<table cellpadding="2">';

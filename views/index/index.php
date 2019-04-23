@@ -43,11 +43,7 @@
         <span>BP 5062 YAOUNDE</span>
         <span>T&eacute;l&eacute;phone: +237 97 86 84 99</span>
         <span><address>Email: institutwague@yahoo.fr</address></span>
-        <span><em>www.institutwague.com</em></span>
-        <span>R&eacute;publique du Cameroun</span>
-        <span>Paix-Travail-Patrie</span>
-        <span style="margin-bottom: 0">***********</span>
-
+        <span><em>www.institutwague.com</em></span> 
     </fieldset>
     <fieldset style="width: 90%; margin: auto;"><legend style="text-align: center">Nous contacter</legend>
         <span style="text-align: left; font-weight: bold; margin-bottom: 10px;">Vous pouvez contacter les concepteurs du syst&egrave;me : </span>

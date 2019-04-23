@@ -3,9 +3,43 @@ $(document).ready(function(){
        bInfo: false,
        "paging": false
    });
-   
+   $('select[name=comboEleves]').select2();
+   $('select[name=comboClasses]').change(function(){
+        if ($("select[name=comboClasses]").val() === "" || $("select[name=comboPeriodes]").val() === "") {
+            $("select[name=comboDistributions]")[0].selectedIndex = 0;
+            addRequiredFields([$("select[name=comboClasses]"), $("select[name=comboPeriodes]")]);
+            alertWebix("Veuillez d'abord remplir les champs obligatoires");
+            return;
+        }
+
+        if ($("select[name=comboDistributions]").val() === "") {
+            return;
+        }
+    
+       if($(this).val() === ""){
+           return
+       }
+       $.ajax({
+           url: "./ajaxsuivi",
+           type: "POST",
+           dataType: "json",
+           data: {
+               action: "chargerEleves",
+               idclasse: $(this).val(),
+               distribution: $("select[name=comboDistributions]").val(),
+               periode: $("select[name=comboPeriodes]").val(),
+           },
+           success: function(result){
+                $("select[name=comboEleves]").html(result[0]);
+                $("#suivi-content").html(result[1]);
+           },
+           error: function(xhr){
+               alert(xhr.responseText);
+           }
+       });
+   });
    $("select[name=comboPeriodes]").change(chargerDistribution);
-   $("select[name=comboDistributions]").change(chargerAbsences);
+   $("select[name=comboEleves]").change(chargerAbsences);
 });
 
 chargerDistribution = function(){
@@ -63,7 +97,7 @@ chargerAbsences = function(){
             $("#suivi-content").html(result[0]);
         },
         error: function(xhr, status, error){
-            
+            alert(xhr.responseText);
         }
     });
 };

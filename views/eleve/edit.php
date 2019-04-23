@@ -73,17 +73,17 @@
                 </span>
             </fieldset>
             <div style="height: 40px; clear: both; content: ' ';"></div>
-            <fieldset style="clear: both; width: 370px">
+            <fieldset style="clear: both; width: 360px">
                 <legend>Date et lieu de naissance</legend>
-                <span class="text" style="width: 140px">
+                <span class="text" style="width: 130px">
                     <label>Date de Naissance</label>
                     <input type="text" id="datenaiss" name="datenaiss" value="<?php echo $eleve['DATENAISS']; ?>" />
                 </span>
-                <span class="select" style="width: 190px; margin-left: 10px;">`
+                <span class="select" style="width: 180px; margin-left: 10px;">`
                     <label>Pays de Naiss.</label>
                     <?php echo $comboNaiss; ?>
                 </span>
-                <span class="text" style="width: 350px">
+                <span class="text" style="width: 330px">
                     <label>Lieu de Naissance</label>
                     <input type="text" name="lieunaiss" value="<?php echo $eleve['LIEUNAISS']; ?>" maxlength="30" />
                 </span>
@@ -127,8 +127,8 @@
                     <?php echo $comboMotifSortie; ?>
                 </span>
             </fieldset>
-            <fieldset style="width: 370px; height: 70px;"><legend>Fr&egrave;res et s&oelig;urs</legend>
-                <span class="text" style="width: 350px">
+            <fieldset style="width: 360px; height: 70px;"><legend>Fr&egrave;res et s&oelig;urs</legend>
+                <span class="text" style="width: 340px">
                     <label>Noms des fr&egrave;res et s&oelig;urs inscrits &agrave; IPW</label>
                     <input type="text" name="frereetsoeur" value="<?php echo $eleve['FRERESOEUR']; ?>" />
                 </span>

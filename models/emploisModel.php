@@ -23,6 +23,24 @@ class emploisModel extends Model{
         return $this->query($query, ["idclasse" => $idclasse]);
     }
     /**
+     * Renvoi les information concernant 
+     * l'emploi du temps de cette classe
+     * @param type $idclasse
+     */
+    public function getEmploisByEnseignant($idenseignant){
+        $query = "SELECT e.*, m.*, p.*, h.*, niv.* "
+                . "FROM emplois e "
+                . "INNER JOIN enseignements ee ON ee.IDENSEIGNEMENT = e.ENSEIGNEMENT "
+                . "INNER JOIN matieres m ON m.IDMATIERE = ee.MATIERE "
+                . "INNER JOIN classes cl ON cl.IDCLASSE = ee.CLASSE "
+                . "INNER JOIN niveau niv ON niv.IDNIVEAU = cl.NIVEAU "
+                . "INNER JOIN personnels p ON p.IDPERSONNEL = ee.PROFESSEUR "
+                . "INNER JOIN horaires h ON h.IDHORAIRE = e.HORAIRE "
+                . "WHERE ee.PROFESSEUR = :prof "
+                . "ORDER BY e.ENSEIGNEMENT, h.ORDRE ASC";
+        return $this->query($query, ["prof" => $idenseignant]);
+    }
+    /**
      * Recherche les enseignements prevu par l'emploi du temps pour ce jour
      * et le classe donnees
      * @param type $jour

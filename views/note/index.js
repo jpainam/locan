@@ -65,12 +65,13 @@ function notifierNotation(_idnotation) {
         data: {
             action: "notifierNotation",
             idnotation: _idnotation,
+            idclasse: $("select[name=comboClasses]").val(),
             idenseignement: $("select[name=comboEnseignements]").val(),
             idperiode: $("select[name=comboPeriodes]").val()
         },
         success: function (result) {
             $("#notes-content").html(result[0]);
-            if (result[1] === 1) {
+            if (result[2]) {
                 alertWebix("Messages de notification envoy&eacute; avec succ&egrave;s");
             } else {
                 alertWebix("Une erreur est survenue lors de l'envoie des SMS de notification");

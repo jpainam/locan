@@ -69,11 +69,11 @@ class EleveController extends Controller {
 
     private function showEleves() {
         $this->view->clientsJS("eleve" . DS . "showEleves");
-        $eleves = $this->Eleve->selectAll();
+        //$eleves = $this->Eleve->selectAll();
         $view = new View();
-        $view->Assign("eleves", $eleves);
+        //$view->Assign("eleves", $eleves);
         $view->Assign("errors", false);
-        $view->Assign("total", count($eleves));
+        //$view->Assign("total", count($eleves));
         $content = $view->Render("eleve" . DS . "showEleves", false);
         $this->Assign("content", $content);
     }
@@ -654,6 +654,8 @@ class EleveController extends Controller {
                 # Impression de la demande d'inscription
                 $eleve = $this->Eleve->get($this->request->ideleve);
                 $view->Assign("eleve", $eleve);
+                $classe = $this->Eleve->getClasse($this->request->ideleve, $this->session->anneeacademique);
+                $view->Assign("classe", $classe);
                 $responsables = $this->Eleve->getResponsables($this->request->ideleve);
                 $view->Assign("responsables", $responsables);
                 $view->Assign("anneescolaire", $this->session->anneeacademique);

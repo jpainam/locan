@@ -21,6 +21,7 @@ $(document).ready(function () {
 
         ]
     });
+    $("select[name=comboEleves]").select2();
     $("select[name=comboClasses]").change(listeAbsences);
 });
 /**

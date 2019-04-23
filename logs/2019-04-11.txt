@@ -1,0 +1,7 @@
+Time : 20:50:38
+SQLSTATE[42S02]: Base table or view not found: 1146 Table 'ipw.tmp_notes' doesn't exist
+Raw SQL : SELECT IDELEVE, NOMEL, PRENOMEL, SEXEEL, PHOTOEL, DATENAISSEL, MATRICULEEL, LIEUNAISSEL, AUTRENOMEL, MOYGENERALE, POINTS, SUMCOEFF, CASE WHEN @_last_moy = MOYGENERALE THEN @curRang ELSE @curRang := @_sequence END AS RANG, @_last_moy := MOYGENERALE, @_sequence := @_sequence + 1 FROM (SELECT IDELEVE, NOMEL, PRENOMEL, SEXEEL, PHOTOEL, DATENAISSEL, MATRICULEEL, LIEUNAISSEL, AUTRENOMEL, SUM(MOYENNE*COEFF)/SUM(COEFF) AS MOYGENERALE, SUM(MOYENNE*COEFF) AS POINTS, SUM(COEFF) AS SUMCOEFF FROM tmp_notes GROUP BY IDELEVE ORDER BY MOYGENERALE DESC ) TOTALS, (SELECT @curRang := 1, @_last_moy := 0, @_sequence := 1) r
+
+Time : 16:01:10
+SQLSTATE[23000]: Integrity constraint violation: 1452 Cannot add or update a child row: a foreign key constraint fails (`ipw`.`emplois`, CONSTRAINT `emplois_ibfk_2` FOREIGN KEY (`HORAIRE`) REFERENCES `horaires` (`IDHORAIRE`) ON DELETE CASCADE ON UPDATE CASCADE)
+Raw SQL : INSERT INTO  emplois( JOUR, ENSEIGNEMENT, HORAIRE) VALUES(:jour,:enseignement,:horaire)

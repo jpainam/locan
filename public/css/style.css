@@ -239,7 +239,7 @@ BREADCRUMB
     /*background-color: #F7F7F7;*/
     /*overflow: auto;*/
     /*padding: 5px;*/
-    //border-radius: 5px;
+    /*border-radius: 5px;*/
     position: relative;
     /*width: 100%;*/
 }
@@ -323,7 +323,7 @@ a{
 }
 /**FICHE */
 .fiche tr:nth-child(2n +1){
-    //background-color: rgb(225, 196, 196); //#E1C4C4
+    /*background-color: rgb(225, 196, 196); //#E1C4C4*/
 }
 .fiche table{
     width: 100%;
@@ -361,6 +361,9 @@ a{
     margin-top: 10px;
     position: relative;
 }
+#page-content span.select2{
+    float: left;
+}
 
 #page-content span.text label, #page-content span.select label{
     left: 0;
@@ -368,6 +371,15 @@ a{
     padding: 0;
     position: absolute;
     top: 0;
+    width: 100%;
+    font-weight: bold;
+}
+#page-content span.select2 label{
+    left: 0;
+    margin: 0 0 0 3px;
+    padding: 0;
+    /*position: absolute;*/
+    /*top: 0;*/
     width: 100%;
     font-weight: bold;
 }
@@ -399,7 +411,16 @@ a{
     top: 14px;
     width: 100%;
 }
-
+#page-content span select2{
+    height: 18px;
+    left: 2px;
+    line-height: 14px;
+    margin: 0;
+    padding: 0;
+    /*position: absolute;*/
+    top: 14px;
+    width: 100%;
+}
 #page-content .page legend{
     color: #B63B00;
     font-weight: bold;
@@ -431,7 +452,7 @@ a{
 }
 
 .dialog span{
-    display: block;
+    /*display: block;*/
     position: relative;
     width: 320px
 }
@@ -509,7 +530,7 @@ p .present, p .absent, p .justifier, p .retard, p .exclu, p .freedays{
     text-align: center;
 }
 .tableAbsences tbody tr:nth-child(2n){
-    background-color: rgb(225, 196, 196); //#E1C4C4
+    background-color: rgb(225, 196, 196); /*#E1C4C4*/
 }
 .tableAbsences tbody tr:nth-child(2n +1){
     background-color: #FFF;
@@ -544,7 +565,7 @@ p .present, p .absent, p .justifier, p .retard, p .exclu, p .freedays{
     border-top: none;
     margin-top: 30px;
     margin-bottom: 35px;
-    //border-radius: 0 0 6px 6px;
+    /*border-radius: 0 0 6px 6px;*/
     margin-left: 148px;
 
 }
@@ -589,4 +610,11 @@ p .present, p .absent, p .justifier, p .retard, p .exclu, p .freedays{
 }
 input[name='type_impression']{
     vertical-align: top !important;
+}
+.select2-container--default .select2-results > .select2-results__options{
+    max-height: 400px !important;
+}
+.select2-results__options{ font-family: Arial, Helvetica, sans-serif; font-size: 12px; }
+.select2 select2-container select2-container--default{
+    width: inherit;
 }

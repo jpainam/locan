@@ -3,7 +3,7 @@
 class responsableController extends Controller {
 
     private $comboCivilite;
-    
+
     public function __construct() {
         parent::__construct();
         $this->loadModel("civilite");
@@ -12,37 +12,35 @@ class responsableController extends Controller {
     }
 
     public function index() {
-        $data = $this->Responsable->selectAll();
-        $responsable = new Grid($data, 0);
-        $responsable->addcolonne(0, "IDRESPONSABLE", "IDRESPONSABLE", false);
-        $responsable->addcolonne(1, "Civ.", "CIVILITE");
-        $responsable->addcolonne(2, "NOM & PRENOM", "CNOM");
-        $responsable->addcolonne(3, "TELEPHONE", "TELEPHONE");
-        $responsable->addcolonne(4, "PORTABLE", "PORTABLE");
-        $responsable->addcolonne(5, "EMAIL", "EMAIL");
-        $responsable->droitdelete = 318;
-        $responsable->droitedit = 317;
-        $responsable->actionbutton = true;
-        $responsable->deletebutton = true;
-        $responsable->editbutton = true;
-        $responsable->dataTable = "responsableTable";
-        
         $view = new View();
-        $view->Assign("responsables", $responsable->display());
-        $view->Assign("total", count($data));
+        $this->view->clientsJS("responsable" . DS . "index");
+        $responsables = $this->Responsable->selectAll();
+        $view->Assign("responsables", $responsables);
         $content = $view->Render("responsable" . DS . "index", false);
         $this->Assign("content", $content);
     }
 
-    public function delete($id){
-        $this->Responsable->delete($id);
-        header("Location:".Router::url("responsable"));
+    public function ajaxindex() {
+        $json = array();
+        $view = new View();
+       
+        $r = $this->Responsable->get($this->request->idresponsable);
+        $view->Assign("r", $r);
+        $eleves = $this->Responsable->getEleves($this->request->idresponsable);
+        $view->Assign("eleves", $eleves);
+         $json[0] = $view->Render("responsable" . DS . "ajax" . DS . "detail", false);
+        echo json_encode($json);
     }
-    
-    public function saisie(){
+
+    public function delete($id) {
+        $this->Responsable->delete($id);
+        header("Location:" . Router::url("responsable"));
+    }
+
+    public function saisie() {
         //var_dump($this->request); //die();
-        if(!empty($this->request->nom)){
-            $acceptsms = (isset($this->request->acceptesms)? "1": "0");
+        if (!empty($this->request->nom)) {
+            $acceptsms = (isset($this->request->acceptesms) ? "1" : "0");
             $params = ["civilite" => $this->request->comboCivilite,
                 "nom" => $this->request->nom,
                 "prenom" => $this->request->prenom,
@@ -54,19 +52,19 @@ class responsableController extends Controller {
                 "profession" => $this->request->profession,
                 "acceptesms" => $acceptsms,
                 "numsms" => $this->request->numsms
-                    ];
+            ];
             $this->Responsable->insert($params);
-            header("Location:".Router::url("responsable"));
+            header("Location:" . Router::url("responsable"));
         }
         $view = new View();
         $view->Assign("comboCivilite", $this->comboCivilite->view());
         $content = $view->Render("responsable" . DS . "saisie", false);
         $this->Assign("content", $content);
     }
-    
-    public function edit($id){
-        if(!empty($this->request->idresponsable)){
-            $acceptsms = (isset($this->request->acceptesms)? "1" : "0");
+
+    public function edit($id) {
+        if (!empty($this->request->idresponsable)) {
+            $acceptsms = (isset($this->request->acceptesms) ? "1" : "0");
             $params = ["civilite" => $this->request->comboCivilite,
                 "nom" => $this->request->nom,
                 "prenom" => $this->request->prenom,
@@ -78,9 +76,9 @@ class responsableController extends Controller {
                 "profession" => $this->request->profession,
                 "acceptesms" => $acceptsms,
                 "numsms" => $this->request->numsms
-                    ];
+            ];
             $this->Responsable->update($params, ["IDRESPONSABLE" => $this->request->idresponsable]);
-            header("Location:".Router::url("responsable"));
+            header("Location:" . Router::url("responsable"));
         }
         $view = new View();
         $resp = $this->Responsable->findSingleRowBy(['IDRESPONSABLE' => $id]);
@@ -90,4 +88,5 @@ class responsableController extends Controller {
         $content = $view->Render("responsable" . DS . "edit", false);
         $this->Assign("content", $content);
     }
+
 }

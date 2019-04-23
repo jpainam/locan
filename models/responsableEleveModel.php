@@ -52,4 +52,12 @@ class responsableEleveModel extends Model{
                 . ")";
         return $this->query($query, ["anneeacad" => $_SESSION['anneeacademique']]);
     }
+    public function getResponsablesForCurrentStudent($anneeacad){
+        $query = "SELECT re.*, r.* "
+                . "FROM `" . $this->_table . "` re "
+                . "INNER JOIN responsables r ON r.IDRESPONSABLE = re.IDRESPONSABLE "
+                . "INNER JOIN eleves el ON el.IDELEVE = re.IDELEVE "
+                . "INNER JOIN inscription i ON i.IDELEVE = el.IDELEVE AND i.ANNEEACADEMIQUE = :anneeacad";
+        return $this->query($query, array("anneeacad" => $anneeacad));
+    }
 }

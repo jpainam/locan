@@ -10,7 +10,7 @@ class emploisController extends Controller {
         $this->loadModel("enseignement");
         $this->loadModel("horaire");
         $data = $this->Classe->selectAll();
-        $this->comboClasses = new Combobox($data, "comboClasses", $this->Classe->getKey(), $this->Classe->getLibelle());
+        $this->comboClasses = new Combobox($data, "comboClasses", $this->Classe->getKey(), ["LIBELLE", "NIVEAUSELECT"]);
     }
 
     public function index() {
@@ -18,7 +18,7 @@ class emploisController extends Controller {
     }
 
     public function saisie() {
-        $this->view->clientsJS("emplois" . DS . "emplois");
+        $this->view->clientsJS("emplois" . DS . "saisie");
 
         $view = new View();
 
@@ -36,7 +36,7 @@ class emploisController extends Controller {
         $view = new View();
         $horaire = $this->Horaire->selectAll();
         $heure_debut = array();
-        foreach ($horaire as $line){
+        foreach ($horaire as $line) {
             $heure_debut[] = substr($line["HEUREDEBUT"], 0, strlen($line["HEUREDEBUT"]) - 3);
         }
         $view->Assign("horaire", $horaire);
@@ -79,6 +79,30 @@ class emploisController extends Controller {
         //apercu de l'emploi du temps: Onglet 2
         $json[2] = $view->Render("emplois" . DS . "ajax" . DS . "apercu", false);
         echo json_encode($json);
+    }
+
+    public function imprimer() {
+        parent::printable();
+        $action = $this->request->code;
+        $type = $this->request->type_impression;
+        $view = new View();
+        $view->Assign("pdf", $this->pdf);
+        switch ($action) {
+            case "0001":
+                # Imprimer l'emploi du temps pour une classe
+                $ens = $this->Emplois->getEmplois($this->request->idclasse);
+                $view->Assign("enseignements", $ens);
+                $classe = $this->Classe->get($this->request->idclasse);
+                $view->Assign("classe", $classe);
+                $horaires = $this->Horaire->findBy(["PERIODE" => $this->session->anneeacademique]);
+                $view->Assign("horaires", $horaires);
+                if ($type == "pdf") {
+                    echo $view->Render("emplois" . DS . "impression" . DS . "emploisdutemps", false);
+                } elseif ($type == "excel") {
+                    echo $view->Render("emplois" . DS . "xls" . DS . "emploisdutemps", false);
+                }
+            break;
+        }
     }
 
 }

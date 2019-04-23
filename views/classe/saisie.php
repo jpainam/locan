@@ -1,4 +1,3 @@
-<div id="entete"><div class="logo"><img src="<?php echo SITE_ROOT . "public/img/wide_classe.png"; ?>" /></div></div>
 <div class="titre">Saisie des classes</div>
 <form action="<?php echo url('classe', 'saisie'); ?>" method="post" enctype="multipart/form-data" name="frmclasse">
     <div class="page" style="">
@@ -125,7 +124,18 @@
                     <label>Coeff.</label>
                     <input id="spinner" name="spin" size ="5" value="2"/>
                 </span>
-
+                <span id="manuelsScol" class="select2">
+                    <label>Manuels scolaires</label>
+                    <select name="manuels[]" multiple="multiple">
+                        <?php 
+                        if(!empty($manuels)){
+                            foreach($manuels as $m) {
+                                echo "<option value='". $m['IDMANUELSCOLAIRE']. "'>" . $m['TITRE']. "</option>";
+                            }
+                        }
+                        ?>
+                    </select>
+                </span>
             </div>
             <div id="matiere_content">
             <table class="dataTable" id="tab_mat">

@@ -196,7 +196,7 @@ if ($codeperiode !== "A") {
 genererCourbe($moyennes, $rang, $codeperiode);
 $courbe = SITE_ROOT . "public/tmp/" . $rang['IDELEVE'] . ".png";
 $pdf->Image($courbe, 18, $y + 200, 55, 40, '', '', 'T', false, 300, '', false, false, 0, false, false, false);
-$filename = ROOT . DS . "public" . DS . "tmp" . DS . $rang['IDELEVE'] . ".png";
+$filename = SITE_ROOT . "public" . DS . "tmp" . DS . $rang['IDELEVE'] . ".png";
 if (file_exists($filename)) {
     try {
         unlink($filename);

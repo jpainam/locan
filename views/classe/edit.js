@@ -3,7 +3,7 @@ $(document).ready(function () {
     $('#tab_mat').DataTable({
         "paging": false,
         "bInfo": false,
-        "scrollY": 300,
+        "scrollY": 200,
         "columns": [
             {"width": "5%"},
             null,
@@ -35,12 +35,15 @@ $(document).ready(function () {
         ]
     });
 
+    $("select[name='manuels[]']").select2();
+    $("select[name='manuelsedit[]']").select2();
     var pop1 = popup("#dialog-1");
     var pop2 = popup("#dialog-2");
     var pop3 = popup("#dialog-3");
     var pop4 = popup("#dialog-4");
     var pop5 = popup("#dialog-5");
-    pop5.dialog("option", "height", 300);
+    pop5.dialog("option", "height", 400);
+    pop5.dialog("option", "width", 400);
 
     $("#ajout_eleve").button().on("click", function () {
         openPopup(pop1);
@@ -70,8 +73,8 @@ $(document).ready(function () {
     });
     $("#dialog-6").dialog({
         autoOpen: false,
-        height: 300,
-        width: 350,
+        height: 400,
+        width: 400,
         modal: true,
         resizable: false,
         buttons: {
@@ -114,12 +117,13 @@ var openPopup = function (_pop) {
     _pop.dialog("open");
 };
 
-function AddMatiere(mat, ens, grp, cof, _ord) {
+function AddMatiere(mat, ens, grp, cof, _ord, _manuels) {
     this.matiere = mat;
     this.enseignant = ens;
     this.groupe = grp;
     this.coeff = cof;
     this.ordre = _ord;
+    this.manuels = _manuels;
 }
 
 var ajoutForm = function (id) {
@@ -155,8 +159,10 @@ var ajoutForm = function (id) {
             img_pp = $("#listematiere");
             var matiere = $("input[name=matiere]");
             tmp = $(id + " span select");
-            var mat = new AddMatiere(tmp[0].value, tmp[1].value, tmp[2].value, parseInt($("#spinner").val()), $("select[name=ordre]").val());
+            var mat = new AddMatiere(tmp[0].value, tmp[1].value, tmp[2].value, parseInt($("#spinner").val()), 
+            $("select[name=ordre]").val(), $("select[name='manuels[]']").val());
             matiere.val(JSON.stringify(mat));
+            console.log(matiere);
             break;
         case 6:
             _url = "../ajax/editenseignement";
@@ -164,7 +170,8 @@ var ajoutForm = function (id) {
             var matiere = $("input[name=matiere]");
             tmp = $(id + " span select");
             console.log(tmp);
-            var mat = new AddMatiere(tmp[0].value, tmp[1].value, tmp[2].value, parseInt($("#spinner1").val()), $("select[name=ordre1]").val());
+            var mat = new AddMatiere(tmp[0].value, tmp[1].value, tmp[2].value, parseInt($("#spinner1").val()), 
+            $("select[name=ordre1]").val(), $("select[name='manuelsedit[]']").val());
             matiere.val(JSON.stringify(mat));
             identifiant.val(enseignement);
             break;

@@ -258,6 +258,7 @@ class appelController extends Controller {
         $comboEleves = new Combobox($eleves, "comboEleves", "IDELEVE", ["NOM", "PRENOM"]);
         $comboEleves->first = " ";
         $view->Assign("comboEleves", $comboEleves->view());
+        $view->Assign("comboClasses", $this->comboClasse->view());
         $content = $view->Render("appel" . DS . "suivi", false);
         $this->Assign("content", $content);
     }
@@ -298,6 +299,22 @@ class appelController extends Controller {
                 $view->Assign("calendrier", $calendrier);
                 $view->Assign("ideleve", $this->request->ideleve);
                 $json[0] = $view->Render("appel" . DS . "ajax" . DS . "suivi", false);
+                break;
+            case "chargerEleves":
+                $eleves = $this->Inscription->getInscrits($this->request->idclasse, $this->session->anneeacademique);
+                $view->Assign("eleves", $eleves);
+                $json[0] = $view->Render('appel' . DS . 'ajax' . DS . 'comboEleves', false);
+                
+                $distribution = $this->request->distribution;
+                $periode = $this->request->periode;
+
+                $tab = $this->getDateIntervals($periode, $distribution);
+                $view->Assign("datedebut", $tab[0]);
+                $view->Assign("datefin", $tab[1]);
+
+                $absences = $this->Absence->getAbsencesByPeriode($tab[0], $tab[1], $this->request->idclasse);
+                $view->Assign("absences", $absences);
+                $json[1] = $view->Render("appel" . DS . "ajax" . DS . "index", false);
                 break;
         }
         echo json_encode($json);

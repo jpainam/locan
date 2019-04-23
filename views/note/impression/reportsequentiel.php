@@ -9,7 +9,7 @@ $classe = $classe['NIVEAUHTML'];
 $col = [5, 35, 5, 7, 7, 18, 5, 8];
 $corps = <<<EOD
         <table border = "0" cellpadding = "5" style="text-align:center;line-height:7px;"><thead>
-        <tr style = "font-weight:bold;" ><th colspan="13" style="font-size:13px" >LISTE DES ELEVES</th></tr>
+        <tr style = "font-weight:bold;" ><th colspan="13" style="font-size:13px" >FICHE DE REPORT DE NOTES</th></tr>
         <tr style = "font-weight:bold"  ><th colspan="3">CLASSE  : $classe </th><th colspan="8"></th>
             <th colspan="3">Coef : .................</th></tr>
        <tr style = "font-weight:bold"  ><th colspan="2"></th><th colspan="11" style="font-size:10px">   

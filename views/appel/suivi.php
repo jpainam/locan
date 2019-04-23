@@ -1,18 +1,29 @@
+<style>
+#page-content span.select2{
+    width: inherit !important;
+}
+</style>
 <div id="entete" style="height: 80px">
     <div class="logo"><img src="<?php echo SITE_ROOT . "public/img/wide_appel.png"; ?>" /></div>
-    <div style="margin-left: 100px">
-        <span class="select" style="width: 300px; margin-top: 0"><label>El&egrave;ves : </label>
-            <?php echo $comboEleves; ?>
-        </span>
-        <span class="select" style="width: 140px; clear: both;margin-top: 0"><label>P&eacute;riodes :</label>
+    <div style="margin-left: 100px;">
+        <span class="select" style="width: 250px; clear: both;margin-top: 0"><label>P&eacute;riodes :</label>
             <select name="comboPeriodes"><option></option>
                 <option value="1">Mensuelle</option>
                 <option value="2">S&eacute;quentielle</option>
                 <option value="3">Trimestrielle</option>
                 <option value="4">Annuelle</option>
             </select></span>
-        <span class="select" style="width: 145px; margin-top: 0"><label>Distribution : </label>
-            <select name="comboDistributions"></select></span>
+        <span class="select" style="width: 250px; margin-top: 0"><label>Distribution : </label>
+            <select name="comboDistributions"></select>
+        </span>
+         <span class="select" style="width: 250px;margin-top: 0"><label> Classes :</label>
+             <?php echo $comboClasses; ?>
+          </span>
+        <span class="select2" style="width: 250px !important; margin-top: 0"><label>El&egrave;ves : </label>
+            <select name="comboEleves">
+           
+            </select>
+        </span>
     </div>
 </div>
 <div class="page">

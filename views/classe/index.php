@@ -27,6 +27,12 @@ if (isAuth(220) && isAuth(328)) {
 } else {
     $_maxnbre = 3;
 }
+
+if(isAuth(220)){
+    $_maxnbre = 5;
+}else{
+    $_maxnbre = 4;
+} 
 ?>
 <form action="<?php echo url('classe', 'saisie'); ?>" method="post">
     <div class="page" style="">
@@ -50,23 +56,30 @@ if (isAuth(220) && isAuth(328)) {
                         Emploi du temps
                     </a>
                 </li>
+                 <li id="tab4" class="noncourant">
+                     <a onclick="onglets(1, 4, <?php echo $_maxnbre; ?>);">
+                         <img border ="0" alt="" src="<?php echo SITE_ROOT . "public/img/icons/matiere.png"; ?>" />
+                            Mati&egrave;re</a>
+                 </li>
                 <?php if (isAuth(220)) { ?>
-                    <li id="tab4" class="noncourant"><a onclick="onglets(1, <?php echo $_situ.','.$_maxnbre; ?>);">
+                    <li id="tab5" class="noncourant"><a onclick="onglets(1, 5, <?php echo $_maxnbre; ?>);">
                             <img border ="0" alt="" src="<?php echo SITE_ROOT . "public/img/icons/caisse.png"; ?>" />
                             Situation financi&egrave;re</a></li>
-                <?php } 
+                <?php } /*
                 if (isAuth(328)) { ?>
                     <li id="tab5" class="noncourant"><a onclick="onglets(1, <?php echo $_notif.','.$_maxnbre; ?>);">
                             <img border ="0" alt="" src="<?php echo SITE_ROOT . "public/img/icons/phone_ring.png"; ?>" />
                             Notification financi&egrave;re</a></li>
-                <?php } ?>
+                <?php }*/ ?>
             </ul>
         </div>
         <div id="onglet1" class="onglet" style="display: block;height: 90%"></div>
         <div id="onglet2" class="onglet" style="display: none;height: 90%"></div>
         <div id="onglet3" class="onglet" style="display: none;height: 90%"></div>
         <div id="onglet4" class="onglet" style="display: none;height: 90%"></div>
-        <div id="onglet5" class="onglet" style="display: none; height: 90%"></div>
+        <?php if(isAuth(220)){ ?>
+            <div id="onglet5" class="onglet" style="display: none; height: 90%"></div>
+        <?php } ?>
     </div>
 
     <div class="navigation">  
@@ -77,19 +90,19 @@ if (isAuth(220) && isAuth(328)) {
             <img src="<?php echo img_pdf(); ?>" />&nbsp;&nbsp;Editions:
             <select onchange="imprimer();" name = "code_impression">
                 <option></option>
-                <option value="0001">Liste simplfi&eacute;e des &eacute;l&egrave;ves</option>
-                <option value="0001">Liste d&eacute;taill&eacute;e des &eacute;l&egrave;ves</option>
+                <option value="0001">Liste des &eacute;l&egrave;ves</option>
+                 <option value="0009">Liste des matières</option>
                 <?php
                 if (isAuth(220)) {
-                    echo '<option value="0003">Imprimer la situation financi&egrave;re</option>';
+                    echo '<option value="0003">Situation financi&egrave;re</option>';
                     echo '<option value="0008">Liste des &eacute;l&egrave;ves d&eacute;biteurs</option>';
                 }
                 if (isAuth(222)) {
-                    echo '<option value="0004">Imprimer les lettres de rappel</option>';
+                    echo '<option value="0004">Lettres de rappel financi&egrave;res</option>';
                 }
                 ?>
                  
-                <option value="0005">Emploi du temps</option>
+                <option value="0006">Emploi du temps de la classe</option>
                 <option value="0007">Fiche de suivi p&eacute;riodique des &eacute;l&egrave;ves</option>
             </select>
         </div>

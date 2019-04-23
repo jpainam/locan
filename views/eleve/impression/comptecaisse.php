@@ -8,7 +8,7 @@ $x = X_PDF;
 $titre = '<h5>' . strtoupper($compte['NOM'] . ' ' . $compte['PRENOM']) . ' </h5>';
 $pdf->WriteHTMLCell(0, 0, $x, $y + 10, $titre);
 
-$pdf->WriteHTMLCell(0, 0, PDF_MIDDLE - 30, $y, "<b>RAPPORT DE COMPTE CAISSE</b>");
+$pdf->WriteHTMLCell(0, 0, PDF_MIDDLE - 30, $y, "<b>RELEVE DE COMPTE</b>");
 $d = new DateFR();
 $pdf->SetFontSize(9);
 $pdf->WriteHTMLCell(50, 0, 155, $y - 10, "<p>N° compte : " . $compte['CODE'] . "<br/>Date g&eacute;n&eacute;ration &eacute;tat : " .

@@ -24,7 +24,7 @@
         $('#tab_mat').DataTable({
             "paging": false,
             "bInfo": false,
-            "scrollY": 300,
+            "scrollY": 200,
             "columns": [
                 {"width": "5%"},
                 null,

@@ -18,13 +18,13 @@ chargerDonnees = function () {
             $("#onglet1").html(result[0]);
             $("#onglet2").html(result[1]);
             $("#onglet3").html(result[2]);
-            $("#onglet4").html(result[3]);
+            $("#onglet4").html(result[9]);
+            $("#onglet5").html(result[3]);
             $("#prof-principal").html(result[4]);
             $("#cpe-principal").html(result[5]);
             $("#resp-admin").html(result[6]);
             $("#effectif").html(result[7]);
             $("#total-frais").html(result[8]);
-            $("#onglet5").html(result[9]);
         },
         error: function (xhr, status, error) {
             alert("Une erreur s'est produite " + xhr + " " + error);

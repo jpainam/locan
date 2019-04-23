@@ -1,4 +1,5 @@
 $(document).ready(function () {
+    $("select[name=comboComptes]").select2();
     $("select[name=comboClasses]").change(chargerComptes);
     $("select[name=comboComptes]").change(chargerPhoto);
 });

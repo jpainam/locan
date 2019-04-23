@@ -66,8 +66,8 @@
             <img src="<?php echo img_imprimer(); ?>" />&nbsp;Editions:
             <select onchange="imprimer();" name = "code_impression">
                 <option></option>
-                <option value="0001">Imprimer une fiche de report de note vierge</option>
-                <option value="0005">Imprimer une fiche de report de note sequentielle</option>
+                <option value="0001">Fiche de report de notes individuelles</option>
+                <option value="0005">Fiche de report de notes périodique</option>
             </select>
         </div>
         <?php

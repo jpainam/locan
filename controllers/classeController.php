@@ -88,7 +88,7 @@ class classeController extends Controller {
         $json[2] = $view->Render("classe" . DS . "ajax" . DS . "onglet3", false);
 
         # Rendu des onglets
-        $json[3] = $view->Render("classe" . DS . "ajax" . DS . "onglet4", false);
+        $json[3] = $view->Render("classe" . DS . "ajax" . DS . "onglet5", false);
         $classe_parametre = $this->Classeparametre->findSingleRowBy(["CLASSE" => $this->request->idclasse]);
 
         $json[4] = $classe_parametre['NOMPRINCIPALE'] . " " . $classe_parametre['PRENOMPRINCIPALE'];
@@ -98,9 +98,12 @@ class classeController extends Controller {
         $json[8] = moneyString($this->Frais->getClasseTotalFrais($this->request->idclasse)['TOTALFRAIS']) . " fcfa";
 
         # onglet 5 : Notification financiere ou lettre de rappel
-        $notifications = $this->Messagerappel->selectAll();
-        $view->Assign("notifications", $notifications);
-        $json[9] = $view->Render("classe" . DS . "ajax" . DS . "notificationfinanciere", false);
+        //$notifications = $this->Messagerappel->selectAll();
+        //$view->Assign("notifications", $notifications);
+        //$json[9] = $view->Render("classe" . DS . "ajax" . DS . "notificationfinanciere", false);
+        $enseignements = $this->Enseignement->getEnseignements($this->request->idclasse);
+        $view->Assign("enseignements", $enseignements);
+        $json[9] = $view->Render("classe" . DS . "ajax" . DS . "onglet4", false);
         echo json_encode($json);
     }
 
@@ -177,7 +180,10 @@ class classeController extends Controller {
             $groupe = $this->Groupe->selectAll();
             $groupeCombo = new Combobox($groupe, "groupe", "IDGROUPE", "DESCRIPTION");
             $view->Assign("comboGroupe", $groupeCombo->view());
-
+            
+            $this->loadModel("manuelscolaire");
+            $manuels = $this->Manuelscolaire->selectAll();
+            $view->Assign("manuels", $manuels);
             $content = $view->Render("classe" . DS . "saisie", false);
             $this->Assign("content", $content);
         }
@@ -287,6 +293,12 @@ class classeController extends Controller {
         $view->Assign("enseignements", $ens);
 
         $view->Assign("message", "");
+        
+        # Manuels
+         $this->loadModel("manuelscolaire");
+        $manuels = $this->Manuelscolaire->selectAll();
+        $view->Assign("manuels", $manuels);
+        
         $content = $view->Render("classe" . DS . "edit", false);
         $this->Assign("content", $content);
     }
@@ -322,10 +334,10 @@ class classeController extends Controller {
                 if ($solde < 0) {
                     $json[3] = $solde;
                     $json[4] = "debitaire";
-                } elseif(isset($exclus) && !empty($exclus)){
+                } elseif (isset($exclus) && !empty($exclus)) {
                     $json[3] = $exclus['DATEEXCLUSION'];
                     $json[4] = "exclus";
-                }else{
+                } else {
                     # Inscrire l'eleve dans  cette classe. Confere la methode inscrire de cette classe
                     $this->inscrire($this->request->identifiant, $idclasse);
                     $json[3] = 0;
@@ -398,7 +410,30 @@ class classeController extends Controller {
                 $mat = json_decode($_POST['matiere']);
                 $params = ["MATIERE" => $mat->matiere, "PROFESSEUR" => $mat->enseignant,
                     "CLASSE" => $idclasse, "GROUPE" => $mat->groupe, "ORDRE" => $mat->ordre, "COEFF" => $mat->coeff];
-                $this->Enseignement->insert($params);
+                $deja = $this->Enseignement->findBy(array(
+                    "matiere" => $mat->matiere, 
+                    "classe" => $idclasse));
+                if(empty($deja)){
+                    $this->Enseignement->insert($params);
+                }else{
+                    $this->Enseignement->update($params, array(
+                        "matiere" => $mat->matiere, 
+                        "classe" => $idclasse));
+                }
+                $manuels = $mat->manuels;
+                $this->loadModel("manuelmatiere");
+                if(!empty($manuels) && is_array($manuels)){
+                     $this->Manuelmatiere->deleteBy(array(
+                            "matiere" => $mat->matiere, 
+                            "anneeacademique" => $this->session->anneeacademique));
+                    foreach($manuels as $ma){
+                        $this->Manuelmatiere->insert(array(
+                            "matiere" => $mat->matiere,
+                            "anneeacademique" => $this->session->anneeacademique,
+                            "manuel" => $ma
+                        ));
+                    }
+                }
                 $ens = $this->Enseignement->getEnseignements($idclasse);
                 $view->Assign("enseignements", $ens);
 
@@ -418,6 +453,20 @@ class classeController extends Controller {
                     "ORDRE" => $mat->ordre];
                 if (isset($mat->matiere)) {
                     $params["MATIERE"] = $mat->matiere;
+                    $manuels = $mat->manuels;
+                    $this->loadModel("manuelmatiere");
+                    if(!empty($manuels) && is_array($manuels)){
+                        $this->Manuelmatiere->deleteBy(array(
+                            "matiere" => $mat->matiere, 
+                            "anneeacademique" => $this->session->anneeacademique));
+                        foreach($manuels as $ma){
+                            $this->Manuelmatiere->insert(array(
+                                "matiere" => $mat->matiere,
+                                "anneeacademique" => $this->session->anneeacademique,
+                                "manuel" => $ma
+                            ));
+                        }
+                    }
                 }
                 $this->Enseignement->update($params, ["IDENSEIGNEMENT" => $this->request->identifiant]);
                 $ens = $this->Enseignement->getEnseignements($idclasse);
@@ -571,22 +620,22 @@ class classeController extends Controller {
             case "0001":
                 # Renvoyer un tableau contenant les id des eleve redoublant
                 $view->Assign("eleves", $eleves);
-                if($type == "pdf"){
+                if ($type == "pdf") {
                     echo $view->Render("classe" . DS . "impression" . DS . "listesimpleeleves", false);
-                }elseif ($type == "excel") {
-                    echo $view->Render("classe" . DS . "xls". DS . "listesimpleeleves", false);
+                } elseif ($type == "excel") {
+                    echo $view->Render("classe" . DS . "xls" . DS . "listesimpleeleves", false);
                 }
                 break;
 
             # Imprimer la liste detaille des eleves de cette classe
-            case "0002":
-                $view->Assign("eleves", $eleves);
-                echo $view->Render("classe" . DS . "impression" . DS . "listedetailleeleves", FALSE);
-                break;
-
+            //case "0002":
+            //   $view->Assign("eleves", $eleves);
+            //   echo $view->Render("classe" . DS . "impression" . DS . "listedetailleeleves", FALSE);
+            //   break;
             # Imprimer l'etat financiere de cette classe
             case "0003":
             case "0008":
+
                 $view->Assign("effectif", count($eleves));
                 $montanttotal = $this->Frais->getClasseTotalFrais($this->request->idclasse)['TOTALFRAIS'];
 
@@ -597,9 +646,17 @@ class classeController extends Controller {
                 $view->Assign("montanfraisapplicable", $montanfraisapplicable);
                 $view->Assign("montanttotal", $montanttotal);
                 if ($action === "0008") {
-                    echo $view->Render("classe" . DS . "impression" . DS . "elevesdebiteurs", false);
+                    if ($type == "pdf") {
+                        echo $view->Render("classe" . DS . "impression" . DS . "elevesdebiteurs", false);
+                    } else {
+                        echo $view->Render("classe" . DS . "xls" . DS . "elevesdebiteurs", false);
+                    }
                 } else {
-                    echo $view->Render("classe" . DS . "impression" . DS . "situationfinanciere", false);
+                    if ($type == "pdf") {
+                        echo $view->Render("classe" . DS . "impression" . DS . "situationfinanciere", false);
+                    } else {
+                        echo $view->Render("classe" . DS . "xls" . DS . "situationfinanciere", false);
+                    }
                 }
                 break;
 
@@ -623,6 +680,15 @@ class classeController extends Controller {
                 break;
             # Imprimer l'emploi du temps de cette classe
             case "0006":
+                $this->loadModel("emplois");
+                $classe = $this->Classe->get($this->request->idclasse);
+                $view->Assign("classe", $classe);
+                $ens = $this->Emplois->getEmplois($this->request->idclasse);
+                $view->Assign("enseignements", $ens);
+                $this->loadModel("horaire");
+                $horaires = $this->Horaire->findBy(["PERIODE" => $this->session->anneeacademique]);
+                $view->Assign("horaires", $horaires);
+                echo $view->Render("classe" . DS . "impression" . DS . "emploisdutemps", false);
                 break;
             case "0007":
                 $view->Assign("eleves", $eleves);
@@ -633,6 +699,15 @@ class classeController extends Controller {
                 }
                 $view->Assign("sequence", $sequence);
                 echo $view->Render("classe" . DS . "impression" . DS . "fichesuiviperiodique", false);
+                break;
+            case "0009":
+                $ens = $this->Enseignement->getEnseignements($this->request->idclasse);
+                $view->Assign("enseignements", $ens);
+                if ($type == "pdf") {
+                    echo $view->Render("classe" . DS . "impression" . DS . "listedesmatieres", false);
+                } elseif ($type == "excel") {
+                    echo $view->Render("classe" . DS . "xls" . DS . "listedesmatieres", false);
+                }
                 break;
         }
     }

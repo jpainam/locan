@@ -28,7 +28,7 @@
                     </tr>
                     <tr>
                         <td>
-                            <label class="txt" title="Ann&eacute;e Acad&eacute;mique">Ann&eacute;e Acad. : </label></td>
+                            <label class="txt" title="Ann&eacute;e Acad&eacute;mique">Ann&eacute;e Scol. : </label></td>
                         <td>
                             <?php echo $anneeacademique; ?>
                         </td>

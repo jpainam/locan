@@ -82,4 +82,25 @@ class fraisController extends Controller {
         echo json_encode($json);
     }
 
+    
+     public function imprimer() {
+        parent::printable();
+
+        $view = new View();
+        $view->Assign("pdf", $this->pdf);
+        $action = $this->request->code;
+        $type = $this->request->type_impression;
+        switch ($action) {
+            case "0001":
+                $frais = $this->Frais->getFrais($this->session->anneeacademique);
+                $view->Assign("frais", $frais);
+                if($type == "pdf"){
+                    echo $view->Render("frais" . DS . "impression" . DS . "listefrais", false);
+                }else{
+                    echo $view->Render("frais" . DS . "xls" . DS . "listefrais", false);
+                }
+                break;
+        }
+    }
+
 }

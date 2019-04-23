@@ -6,7 +6,7 @@ $pdf->SetPrintHeader(false);
 $y = PDF_Y;
 $x = PDF_X;
 $middle = PDF_MIDDLE;
-$pdf->WriteHTMLCell(0, 5, $middle + 10, $y - 5, '<h3 style="text-decoration:underline">Conseill&acirc;t &agrave; l\'&eacute;ducation</h3>');
+//$pdf->WriteHTMLCell(0, 5, $middle + 10, $y - 5, '<h3 style="text-decoration:underline">Conseill&acirc;t &agrave; l\'&eacute;ducation</h3>');
 $pdf->WriteHTMLCell(0, 5, $middle - 30, $y + 5, '<h4 style="text-decoration:underline">FICHE DE SUIVI DISCIPLINAIRE DU PERSONNEL ENSEIGNANT</h4>');
 
 $pdf->setFont("Times", "", 12);
@@ -39,5 +39,5 @@ for($i = 1; $i < 13; $i++){
 $corps .= '</tbody></table>';
 $pdf->WriteHTMLCell(0, 5, $x, $y + 30, $corps);
 
-$pdf->WriteHTMLCell(0, 5, $x + 200, $y + 130, '<span style="text-decoration:underline">Le Conseiller &agrave; l\'&eacute;ducation</span>');
+$pdf->WriteHTMLCell(0, 5, $x + 200, $y + 130, '<span style="text-decoration:underline">Signature et Date</span>');
 $pdf->Output();

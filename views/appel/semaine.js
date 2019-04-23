@@ -200,3 +200,39 @@ function notifyDailyAbsence(_ideleve, _idappel, _jour) {
         }
     });
 }
+function imprimer() {
+    if ($("select[name=code_impression]").val() === "") {
+        return;
+    }
+    removeRequiredFields([$("#comboClasses"), $("#datedu"), $("#dateau")]);
+    if ($("#comboClasses").val() === "" || caldu.getValue() === "" || calau.getValue() === "") {
+        addRequiredFields([$("#comboClasses"), $("#datedu"), $("#dateau")]);
+        alertWebix("Veuillez d'abord remplir les champs obligatoires");
+        return;
+    }
+    var d1 = caldu.getValue();
+    var d2 = calau.getValue();
+
+    var frm = $("<form>", {
+        action: "./imprimer",
+        target: "_blank",
+        method: "post"
+    }).append($("<input>", {
+        name: "code",
+        type: "hidden",
+        value: $("select[name=code_impression]").val()
+    })).append($("<input>", {
+        name: "idclasse",
+        type: "hidden",
+        value: $("#comboClasses").val()
+    })).append($("<input>", {
+        name: "datedebut",
+        type: "hidden",
+        value: d1.split(' ')[0]
+    })).append($("<input>", {
+        name: "datefin",
+        type: "hidden",
+        value: d2.split(' ')[0]
+    })).appendTo("body");
+    frm.submit();
+}

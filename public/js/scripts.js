@@ -400,7 +400,9 @@ function replaceAll(find, replace, str) {
 function ajourIndice() {
     var _url = $(location).attr("pathname");
     _url = _url.split("/");
-
+    if(_url[2] === ""){
+        _url[2] = "etablissement";
+    }
     console.log(_url);
 
     var _chemin = "index";

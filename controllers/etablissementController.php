@@ -169,6 +169,11 @@ class etablissementController extends Controller {
              case "0008":
                 echo $view->Render("etablissement" . DS . "impression" . DS . "nouveaueleve", false);
                 break;
+            case "0009":
+                $view->Assign("anneescolaire", $_SESSION['anneeacademique']);
+                echo $view->Render("etablissement" . DS . "impression" . DS . "fichedemandeinscription",
+                        false);
+                break;
         }
     }
 

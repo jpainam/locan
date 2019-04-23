@@ -50,10 +50,21 @@ class enseignantController extends Controller {
 
         $array_of_redoublants = $this->Classe->getRedoublantsByAnneeAcademique($this->session->anneeacademique, true);
         $view->Assign("array_of_redoublants", $array_of_redoublants);
-
+        
         $json[0] = $view->Render("enseignant" . DS . "ajax" . DS . "onglet1", false);
         $json[1] = $view->Render("enseignant" . DS . "ajax" . DS . "onglet2", false);
         $json[2] = $view->Render("enseignant" . DS . "ajax" . DS . "onglet3", false);
+        $this->loadModel("emplois");
+        $emplois = $this->Emplois->getEmploisByEnseignant($this->request->idpersonnel);
+        $view->Assign("enseignements", $emplois);
+        $this->loadModel("horaire");
+        $horaire = $this->Horaire->findBy(["PERIODE" => $this->session->anneeacademique]);
+        $view->Assign("horaire", $horaire);
+        $heure_debut = array();
+        foreach ($horaire as $line){
+            $heure_debut[] = substr($line["HEUREDEBUT"], 0, strlen($line["HEUREDEBUT"]) - 3);
+        }
+        $view->Assign("heure_debut", json_encode($heure_debut));
         $json[3] = $view->Render("enseignant" . DS . "ajax" . DS . "onglet4", false);
 
         echo json_encode($json);
@@ -292,6 +303,18 @@ class enseignantController extends Controller {
                 $enseignants = $this->Etablissement->getEnseignants($this->session->anneeacademique);
                 $view->Assign("enseignants", $enseignants);
                 echo $view->Render("enseignant" . DS . "impression" . DS . "repertoiretelephonique", false);
+                break;
+            case "0010":
+                # Imprimer l'emploi du temps pour une classe
+                $this->loadModel("emplois");
+                $emplois = $this->Emplois->getEmploisByEnseignant($this->request->idpersonnel);
+                $prof = $this->Personnel->get($this->request->idpersonnel);
+                $view->Assign("prof", $prof);
+                $view->Assign("enseignements", $emplois);
+                $this->loadModel("horaire");
+                $horaires = $this->Horaire->findBy(["PERIODE" => $this->session->anneeacademique]);
+                $view->Assign("horaires", $horaires);     
+                echo $view->Render("enseignant" . DS . "impression" . DS . "emploisdutemps", false);
                 break;
         }
     }

@@ -63,7 +63,8 @@ class sequenceModel extends Model {
             $params[$key] = $condition;
         }
         $str = substr($str, 0, strlen($str) - 4);
-        $query = "SELECT s.*, s.DATEDEBUT AS DEBUTSEQUENCE, s.DATEFIN AS FINSEQUENCE, "
+        $query = "SELECT s.*, s.LIBELLE AS SEQUENCELIBELLE, "
+                . "s.DATEDEBUT AS DEBUTSEQUENCE, s.DATEFIN AS FINSEQUENCE, "
                 . "s.ORDRE AS SEQUENCEORDRE, t.*, t.ORDRE AS TRIMESTREORDRE, "
                 . "ann.*, ann.DATEFIN AS FINANNEE, ann.DATEDEBUT AS DEBUTANNEE "
                 . "FROM sequences s "

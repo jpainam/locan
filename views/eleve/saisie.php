@@ -76,18 +76,18 @@
                 </span>
             </fieldset>
             <div style="height: 30px; clear: both; content: ' ';"></div>
-            <fieldset style="width: 370px">
+            <fieldset style="width: 360px">
                 <legend>Date et lieu de naissance</legend>
-                <span class="text" style="width: 140px">
+                <span class="text" style="width: 130px">
                     <label>Date de Naissance</label>
                     <!-- div id="datenaiss" style="margin-top: 10px;"></div -->
                     <input type="text" id="datenaiss" name="datenaiss" placeholder="Date Naissance" />
                 </span>
-                <span class="select" style="width: 190px; margin-left: 10px;">
+                <span class="select" style="width: 180px; margin-left: 10px;">
                     <label>Pays de Naiss.</label>
                     <?php echo $paysnaiss; ?>
                 </span>
-                <span class="text" style="width: 350px">
+                <span class="text" style="width: 330px">
                     <label>Lieu de Naissance</label>
                     <input type="text" name="lieunaiss" maxlength="30" />
                 </span>
@@ -135,8 +135,8 @@
                     <input type="text" name="motifsortie" disabled="disabled" value="R.A.S" />
                 </span>
             </fieldset>
-            <fieldset style="width: 370px; height: 70px;"><legend>Fr&egrave;res et s&oelig;urs</legend>
-                <span class="text" style="width: 350px">
+            <fieldset style="width: 360px; height: 70px;"><legend>Fr&egrave;res et s&oelig;urs</legend>
+                <span class="text" style="width: 340px">
                     <label>Noms des fr&egrave;res et s&oelig;urs inscrits &agrave; IPW</label>
                     <input type="text" name="frereetsoeur" />
                 </span>

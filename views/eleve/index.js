@@ -5,6 +5,7 @@ $(document).ready(function () {
         $("select[name=listeeleve]").val($("input[name=ideleve]").val());
         $("input[name=ideleve]").val("");
     }
+    $('select[name=listeeleve]').select2();
     $("#editer-note-dialog").dialog({
         autoOpen: false,
         height: 210,
@@ -41,10 +42,10 @@ function chargerEleve() {
             $("#onglet1").html(result[0]);
             $("#onglet2").html(result[1]);
             $("#onglet3").html(result[2]);
-            $("#onglet4").html(result[3]);
-            $("#onglet5").html(result[4]);
-            $("#onglet6").html(result[5]);
-            $("#onglet7").html(result[6]);
+            //$("#onglet4").html(result[3]);
+            $("#onglet4").html(result[4]);
+            $("#onglet5").html(result[5]);
+            $("#onglet6").html(result[6]);
         },
         error: function (xhr, status, error) {
             alertWebix("Veuillez rafraichir la page \n" + status + " " + error);

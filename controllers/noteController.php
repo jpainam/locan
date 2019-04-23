@@ -61,12 +61,12 @@ class noteController extends Controller {
         $view->Assign("notations", $notations);
         $tableNotes = $view->Render("note" . DS . "ajax" . DS . "tableNotes", false);
         $view->Assign("tableNotes", $tableNotes);
-        
+
         $notesnonsaisies = array();
         $view->Assign("notesnonsaisies", $notesnonsaisies);
         $tableNotesNonSaisies = $view->Render("note" . DS . "ajax" . DS . "tableNotesNonSaisies", false);
         $view->Assign("tableNotesNonSaisies", $tableNotesNonSaisies);
-        
+
         $content = $view->Render("note" . DS . "index", false);
         $this->Assign("content", $content);
     }
@@ -81,14 +81,8 @@ class noteController extends Controller {
         $view = new View();
         switch ($action) {
             case "notifierNotation":
-                # Activer les fonctionnalites SMS
-                if (!$this->activateSMS()) {
-                    # Une erreur s'est produite
-                    $json[1] = 0;
-                } else {
-                    $this->notifyNotation($this->request->idnotation);
-                    $json[1] = 1;
-                }
+                $this->notifyNotation($this->request->idnotation);
+                $json[2] = true;
             case "chargerNotation":
                 $idclasse = $this->request->idclasse;
                 $idperiode = $this->request->idperiode;
@@ -124,10 +118,12 @@ class noteController extends Controller {
         $personnel = $this->Personnel->findSingleRowBy(["USER" => $this->session->iduser]);
 
         $datedevoir = empty($this->request->datedevoir) ? date("Y-m-d", time()) : parseDate($this->request->datedevoir);
-        $params = ["enseignement" => $this->request->idenseignement,
+        $idenseignement = $this->request->idenseignement;
+        $idsequence = $this->request->sequence;
+        $params = ["enseignement" => $idenseignement,
             "description" => $this->request->description,
             "notesur" => $this->request->notesur,
-            "sequence" => $this->request->sequence,
+            "sequence" => $idsequence,
             "datejour" => date("Y-m-d", time()),
             "datedevoir" => $datedevoir,
             "realiserpar" => $personnel['IDPERSONNEL']
@@ -135,13 +131,14 @@ class noteController extends Controller {
 
         $this->Notation->insert($params);
         $idnotation = $this->Notation->lastInsertId();
+        $to_send = array();
         foreach ($eleves as $el) {
             $cc = $this->request->{"cc_" . $el['IDELEVE']};
             $dp = $this->request->{"dp_" . $el['IDELEVE']};
             $si = $this->request->{"si_" . $el['IDELEVE']};
-            if(!empty($cc) && !empty($dp) && !empty($si)){
-                $note = ($cc * 20./100.) + ($dp * 20./100.) + ($si * 80./100.);
-            }else{
+            if (!empty($cc) && !empty($dp) && !empty($si)) {
+                $note = ($cc * 20. / 100.) + ($dp * 20. / 100.) + ($si * 80. / 100.);
+            } else {
                 $note = $this->request->{"note_" . $el['IDELEVE']};
             }
             $note = str_replace(",", ".", $note);
@@ -155,9 +152,9 @@ class noteController extends Controller {
                 $note = NULL;
                 $absent = 1;
             }
-            if(!empty($this->request->{"observationCC_" . $el['IDELEVE']})){
+            if (!empty($this->request->{"observationCC_" . $el['IDELEVE']})) {
                 $observation = $this->request->{"observationCC_" . $el['IDELEVE']};
-            }else{
+            } else {
                 $observation = $this->request->{"observation_" . $el['IDELEVE']};
             }
 
@@ -166,8 +163,9 @@ class noteController extends Controller {
                 "eleve" => $ideleve,
                 "absent" => $absent,
                 "observation" => $observation];
+            $to_send[] = $params;
             $this->Note->insert($params);
-            if(!empty($cc) && !empty($dp) && !empty($si)){
+            if (!empty($cc) && !empty($dp) && !empty($si)) {
                 $this->Notecontinue->insert(array(
                     "notation" => $idnotation,
                     "eleve" => $ideleve,
@@ -177,7 +175,33 @@ class noteController extends Controller {
                 ));
             }
         }
-        header("Location:" . Router::url("note"));
+        if (SEND_NOTE_NOTIFICATION_DIRECTLY) {
+            $this->send_note_notification($idnotation, $to_send, $idenseignement, $idsequence, $this->request->notesur);
+        }
+        //header("Location:" . Router::url("note"));
+    }
+
+    private function send_note_notification($idnotation, $params, $idenseignement, $idsequence, $notesur) {
+        $sequence = $this->Sequence->get($idsequence);
+        $ens = $this->Enseignement->get($idenseignement);
+        foreach ($params as $pr) {
+            $eleve = $this->Eleve->get($pr['eleve']);
+            $responsables = $this->Eleve->getResponsables($pr['eleve']);
+            foreach ($responsables as $resp) {
+                if (!empty($resp['NUMSMS'])) {
+                    $param = array("student_name" => $eleve['PRENOM'],
+                        "matiere" => $ens['MATIERELIBELLE'],
+                        "note" => $pr['note'],
+                        "observation" => $pr['observation'],
+                        "sequence" => $sequence['SEQUENCELIBELLE'],
+                        "notesur" => $notesur);
+                    $this->notifyResponsables($resp['NUMSMS'], $param);
+                }
+            }
+        }
+        // Update the notification send for this notations
+        $notation = $this->Notation->get($idnotation);
+        $this->Notation->update(["NOTIFICATION" => ($notation['NOTIFICATION'] + 1)], ["IDNOTATION" => $idnotation]);
     }
 
     public function saisie() {
@@ -576,19 +600,18 @@ class noteController extends Controller {
             $view->Assign("trimestre", $trimestre);
             $sequences = $this->Sequence->findBy(['TRIMESTRE' => $idperiode]);
             $array_of_sequences = [$sequences[0]['IDSEQUENCE'], $sequences[1]['IDSEQUENCE']];
-            
+
             # Obtenir les moyennes sequentielle du trimestre
             $this->Bulletin->createTMPNoteTable($idclasse, $array_of_sequences[0]);
             $sequence1 = $this->Bulletin->getElevesRang();
             $this->Bulletin->createTMPNoteTable($idclasse, $array_of_sequences[1]);
             $sequence2 = $this->Bulletin->getElevesRang();
-            
+
             $this->Bulletin->createTrimestreTable($idclasse, $array_of_sequences);
             $rangs = $this->Bulletin->getElevesRang();
             $moyclasse = $moymax = $moymin = 0;
             setmoyrangtrimestriel($rangs, $sequence1, $sequence2, $moyclasse, $moymax, $moymin);
             $view->Assign("rangs", $rangs);
-            
         } elseif ($codeperiode === "A") {
             # Obtenir les moyennes sequentielles
             $sequences = $this->Sequence->getIdSequences($_SESSION['anneeacademique']);
@@ -630,52 +653,51 @@ class noteController extends Controller {
      * @param string $type type de message dans BD, voir la table messages
      */
     public function notifyNotation($idnotation, $type = "0003") {
-        # Format du SMS 
-        /* Bjr Note de l'élève #eleve : #note/#notesur Mati&egrave; : #matiere Note maxi : #notemaxi
-          Note mini : #notemini Note Moyenne : #notemoy #description du #datedevoir */
-        $message = $this->Messagetype->getMessage($type)['MESSAGE'];
-        # Obtenir les infos concernant cette notation
         $notation = $this->Notation->get($idnotation);
-
         # Pour chaque notes, rechercher les responsables de l'eleves et leurs envoyer
         $notes = $this->Note->findBy(["NOTATION" => $idnotation]);
-        $retVal = false;
-
         foreach ($notes as $n) {
-            $params = ["#eleve " => $n['NOM'],
-                "#note " => $n['NOTE'],
-                "#notesur " => $notation['NOTESUR'],
-                "#matiere " => $notation['MATIERELIBELLE'],
-                "#notemaxi " => $notation['NOTEMAX'],
-                "#notemini " => $notation['NOTEMIN'],
-                "#notemoy " => sprintf("%.2f", $notation['NOTEMOYENNE']),
-                "#description " => $notation['DESCRIPTION'],
-                "#datedevoir " => $notation['DATEDEVOIR']
-            ];
-            $m = $this->personnalize($params, $message);
-
-            #Obtenir le parent de l'eleve
-            $responsables = $this->Eleve->getResponsables($n['IDELEVE']);
-            $retVal = $this->notifyResponsables($responsables, $m);
+            $eleve = $this->Eleve->get($n['ELEVE']);
+            $responsables = $this->Eleve->getResponsables($eleve['IDELEVE']);
+            foreach ($responsables as $resp) {
+                if (!empty($resp['NUMSMS'])) {
+                    $param = array("student_name" => $eleve['PRENOM'],
+                        "matiere" => $notation['MATIERELIBELLE'],
+                        "note" => $n['NOTE'],
+                        "observation" => $n['OBSERVATION'],
+                        "sequence" => $notation['SEQUENCELIBELLE'],
+                        "notesur" => intval($notation['NOTESUR']));
+                    $this->notifyResponsables($resp['NUMSMS'], $param);
+                }
+            }
         }
         # Mettre a jour le nombre de notification envoye pour cette notation
         $this->Notation->update(["NOTIFICATION" => ($notation['NOTIFICATION'] + 1)], ["IDNOTATION" => $idnotation]);
-        return $retVal;
     }
 
-    private function notifyResponsables($responsables, $message) {
-        $retVal = false;
-        foreach ($responsables as $resp) {
-            $tel = getRespNumPhone($resp);
-            if (!empty($tel)) {
-                $v = $this->send($tel, $message);
-                if ($v) {
-                    $retVal = $v;
-                }
-                sleep(3);
-            }
-        }
-        return $retVal;
+    private function notifyResponsables($phone_number, $params) {
+        $url = REMOTE_SERVER . "note.php";
+        $ch = curl_init($url);
+        curl_setopt_array($ch, array(
+            CURLOPT_HEADER => true,
+            CURLOPT_FRESH_CONNECT => true,
+            CURLOPT_POST => true,
+            //CURLOPT_CONNECTTIMEOUT => 0
+            CURLOPT_POSTFIELDS => array(
+                "phone_number" => $phone_number,
+                "student_name" => $params['student_name'],
+                "matiere" => $params['matiere'],
+                "note" => $params['note'],
+                "observation" => $params['observation'],
+                "sequence" => $params['sequence'],
+                "notesur" => $params['notesur']
+            )
+        ));
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        $result = curl_exec($ch);
+        curl_close($ch);
     }
 
     /**

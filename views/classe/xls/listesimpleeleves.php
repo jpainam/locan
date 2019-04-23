@@ -26,11 +26,15 @@ $sheet->setCellValue("A2", "N°")
         ->setCellValue("C2", "Noms")
         ->setCellValue("D2", "Prénoms")
         ->setCellValue("E2", "Date Naiss")
-        ->setCellValue("F2", "Redoublant");
-$sheet->getStyle("A1:F2")->getFont()->setBold(true);
-$sheet->getStyle('A2:F2')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID);
+        ->setCellValue("F2", "Redoublant")
+        ->setCellValue("G2", "Sexe")
+        ->setCellValue("H2", "Lieu de Naissance")
+        ->setCellValue("I2", "Provenance")
+        ->setCellValue("J2", "Résidence");
+$sheet->getStyle("A1:J2")->getFont()->setBold(true);
+$sheet->getStyle('A2:J2')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID);
 
-$sheet->getStyle('A2:F2')->getFill()->getStartColor()->setARGB('FFC4BD97');
+$sheet->getStyle('A2:J2')->getFill()->getStartColor()->setARGB('FFC4BD97');
 
 
 if (!is_array($array_of_redoublants)) {
@@ -50,12 +54,17 @@ foreach ($eleves as $el) {
             ->setCellValue('C' . $i,  preg_replace('/(\'|&#0*39;)/', '\'', $el['NOM']))
             ->setCellValue('D' . $i, preg_replace('/(\'|&#0*39;)/', '\'', $el['PRENOM']))
             ->setCellValue('E' . $i, date("d/m/Y", strtotime($el['DATENAISS'])))
-            ->setCellValue('F' . $i, $redoublant);
+            ->setCellValue('F' . $i, $redoublant)
+            ->setCellValue("G" . $i, $el['SEXE'])
+            ->setCellValue("H" . $i, $el['LIEUNAISS'])
+            ->setCellValue("I" . $i, $el['FK_PROVENANCE'])
+            ->setCellValue("J" . $i, $el['RESIDENCE'])
+            ;
     $i++;
     $j++;
 }
 
-setAutoSize($sheet, ["A", "B", "C", "D", "E", "F"]);
+setAutoSize($sheet, ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"]);
 $sheet->setTitle("Liste des Eleves");
 $spreadsheet->setActiveSheetIndex(0);
 header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');

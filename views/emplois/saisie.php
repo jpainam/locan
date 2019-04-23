@@ -1,12 +1,15 @@
-<div id="entete"><div class="logo"><img src="<?php echo SITE_ROOT . "public/img/wide_emplois.png"; ?>" /></div>
+<div id="entete" style="height: 80px">
+    <div class="logo"><img src="<?php echo SITE_ROOT . "public/img/wide_emplois.png"; ?>" /></div>
     <div style="margin-left: 100px">
         <span class="select" style="width: 200px"><label>Classes: </label><?php echo $comboClasses; ?></span>
     </div>
+    <div style="float: right">
+        <img id="ajout-emplois" style="cursor: pointer;margin-top: 15px; margin-right: 10px;" 
+             src="<?php echo SITE_ROOT . "public/img/btn_add.png" ?>" />
+    </div>
 </div>
 <form action="<?php echo Router::url("emplois", "saisie") ?>" method="post">
-
     <div class="page">
-        <img id="ajout-emplois" style="cursor: pointer;float: right;margin-right: 10px;" src="<?php echo SITE_ROOT . "public/img/btn_add.png" ?>" />
         <div class="tabs" style="width: 100%">
             <ul><li id="tab1" class="courant">
                     <a onclick="onglets(1, 1, 2);"><img  src="<?php echo SITE_ROOT . "public/img/icons/emploistemps.png"; ?>" />
@@ -36,10 +39,10 @@
                 <span><label>Mati&egrave;res : </label><select name = 'enseignement' style="width: 100%"></select></span>
                 <span style="width: 150px; float: left; margin-right: 20px"><label>Heure d&eacute;but:</label>
                     <select name="horairedebut" id="horairedebut" style="width: 100%">
-                         <option></option>
+                        <option></option>
                         <?php
-                        foreach ($horaires as $h){
-                            echo "<option value='".$h['IDHORAIRE']."'>".$h['DESCRIPTIONSELECT']."</option>";
+                        foreach ($horaires as $h) {
+                            echo "<option value='" . $h['IDHORAIRE'] . "'>" . $h['DESCRIPTIONSELECT'] . "</option>";
                         }
                         ?>
                     </select>
@@ -48,8 +51,8 @@
                     <select name="horairefin" id="horairefin" style="width: 100%">
                         <option></option>
                         <?php
-                        foreach ($horaires as $h){
-                            echo "<option value='".$h['IDHORAIRE']."'>".$h['DESCRIPTIONSELECT']."</option>";
+                        foreach ($horaires as $h) {
+                            echo "<option value='" . $h['IDHORAIRE'] . "'>" . $h['DESCRIPTIONSELECT'] . "</option>";
                         }
                         ?>
                     </select>
@@ -62,6 +65,17 @@
         </div>
     </div>
     <div class="recapitulatif"></div>
-    <div class="navigation"></div>
+    <div class="navigation">
+        <div class="editions">
+            <input type="radio" value="excel" name="type_impression" />
+            <img src="<?php echo img_excel(); ?>" />&nbsp;&nbsp;
+            <input type="radio" value="pdf" name="type_impression" checked="checked" />
+            <img src="<?php echo img_pdf(); ?>" />&nbsp;&nbsp;Editions:
+            <select onchange="imprimer();" name = "code_impression">
+                <option></option>
+                <option value="0001">Emplois du temps</option>
+            </select>
+        </div>
+    </div>
 </form>
 <div class="status"></div>

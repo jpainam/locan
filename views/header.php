@@ -1,7 +1,7 @@
 <?php if ($authentified) { ?>
     <div id = "page-header">
         <!-- h1>ENTETE DU SITE CONTENANT NOS DEUX LOGO</h1 -->
-        <a href="<?php echo Router::url(); ?>" style="border: none;padding: 0; margin: 0;">
+        <a href="<?php echo SITE_ROOT; ?>" style="border: none;padding: 0; margin: 0;">
             <img  height="180" width="200" src="<?php echo SITE_ROOT . "public/img/" . LOGO ?>"  /></a>
         <div id = "menu">
 

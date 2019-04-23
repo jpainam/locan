@@ -7,8 +7,8 @@
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         <title>Gestion des activités académique</title>
         <link href = "<?php echo SITE_ROOT; ?>public/img/favicon.ico" rel = "shortcut icon" type = "image/vnd.microsoft.icon" />
+        <link href="<?php echo SITE_ROOT; ?>public/css/select2.min.css" rel="stylesheet" />
         <link href = "<?php echo SITE_ROOT; ?>public/css/style.css" rel = 'stylesheet' type = 'text/css' />
-        
         <?php
         # <link href = "<?php echo SITE_ROOT; public/css/jquery.datetimepicker.css" rel = 'stylesheet' type = 'text/css' />
         global $css;
@@ -17,6 +17,7 @@
         }
         # <script type="text/javascript" src="<?php echo SITE_ROOT; public/js/jquery.datetimepicker.js"></script>
         ?><script type="text/javascript" src="<?php echo SITE_ROOT; ?>public/js/jquery-1.11.2.min.js"></script>
+        <script src="<?php echo SITE_ROOT; ?>public/js/select2.min.js"></script>
         <script type="text/javascript" src="<?php echo SITE_ROOT; ?>public/js/scripts.js"></script>
         <?php echo $clientsjs; ?>
         <?php

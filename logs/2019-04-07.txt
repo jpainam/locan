@@ -1,0 +1,3 @@
+Time : 19:27:02
+SQLSTATE[23000]: Integrity constraint violation: 1452 Cannot add or update a child row: a foreign key constraint fails (`ipw`.`caisses`, CONSTRAINT `caisses_ibfk_3` FOREIGN KEY (`PERCUPAR`) REFERENCES `personnels` (`IDPERSONNEL`) ON DELETE SET NULL ON UPDATE CASCADE)
+Raw SQL : INSERT INTO  caisses( COMPTE, TYPE, REFTRANSACTION, REFCAISSE, DESCRIPTION, MONTANT, DATETRANSACTION, ENREGISTRERPAR, PERCUPAR, DATEPERCEPTION, IMPRIMERPAR, DATEIMPRESSION, VALIDE, PERIODE) VALUES(:compte,:type,:reftransaction,:refcaisse,:description,:montant,:datetransaction,:enregistrerpar,:percupar,:dateperception,:imprimerpar,:dateimpression,:valide,:periode)

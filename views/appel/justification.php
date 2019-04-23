@@ -1,3 +1,8 @@
+<style>
+#page-content span.select2{
+    width: inherit !important;
+}
+</style>
 <div id="entete" style="height: 80px">
     <div class="logo"><img src="<?php echo SITE_ROOT . "public/img/wide_justification.png"; ?>" /></div>
     <div style="margin-left: 100px">

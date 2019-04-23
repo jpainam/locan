@@ -1,15 +1,15 @@
 <div id="entete">
     <div class="logo"><img src="<?php echo SITE_ROOT . "public/img/wide_saisieeleve.png"; ?>" /></div>
-    <div style="margin-left: 120px"><span class="select" style="width: 250px">
+    <div style="margin-left: 120px"><span class="select2" style="width: 400px">
             <label>Liste des élèves : </label>
             <?php echo $eleves; ?></span>
     </div>
 </div>
 <?php
 if(isAuth(219)){
-    $_nbre = 7;
-}else{
     $_nbre = 6;
+}else{
+    $_nbre = 5;
 } ?>
 <div class="titre"></div>
 <form action="<?php echo url('eleve', 'saisie'); ?>" method="post">
@@ -34,26 +34,26 @@ if(isAuth(219)){
                         Emploi du temps
                     </a>
                 </li>
-                <li id="tab4" class="noncourant">
+                <?php /*<li id="tab4" class="noncourant">
                     <a onclick="onglets(1, 4, <?php echo $_nbre; ?>);">
                         <img border ="0" alt="" src="<?php echo SITE_ROOT . "public/img/icons/viescolaire.png"; ?>" />
                         Vie scolaire
                     </a>
-                </li>
-                <li id="tab5" class="noncourant">
-                    <a onclick="onglets(1, 5, <?php echo $_nbre; ?>);">
+                </li> */ ?>
+                <li id="tab4" class="noncourant">
+                    <a onclick="onglets(1, 4, <?php echo $_nbre; ?>);">
                         <img border ="0" alt="" src="<?php echo SITE_ROOT . "public/img/icons/note.png"; ?>" />
                         Notes
                     </a>
                 </li>
-                <li id="tab6" class="noncourant">
-                    <a onclick="onglets(1, 6, <?php echo $_nbre; ?>);">
+                <li id="tab5" class="noncourant">
+                    <a onclick="onglets(1, 5, <?php echo $_nbre; ?>);">
                         <img border ="0" alt="" src="<?php echo SITE_ROOT . "public/img/icons/suivi.png"; ?>" />
                         Suivi
                     </a>
                 </li>
                 <?php if(isAuth(219)){ ?>
-                <li id="tab7" class="noncourant"><a onclick="onglets(1, 7, <?php echo $_nbre; ?>);">
+                <li id="tab6" class="noncourant"><a onclick="onglets(1, 6, <?php echo $_nbre; ?>);">
                         <img border ="0" alt="" src="<?php echo SITE_ROOT . "public/img/icons/caisse.png"; ?>" />
                         Situation financi&egrave;re</a></li>
                 <?php } ?>
@@ -90,13 +90,13 @@ if(isAuth(219)){
         <div id="onglet3" class="onglet" style="display: none;height: 90%">
             <?php //echo $emplois; ?>
         </div>
-        <div id="onglet4" class="onglet" style="display: none;height: 90%">
-            <?php //echo $viescolaire; ?>
-        </div>
+        <?php /*<div id="onglet4" class="onglet" style="display: none;height: 90%">
+             //echo $viescolaire; 
+        </div> */?>
+        <div id="onglet4" class="onglet" style="display: none;height: 90%"></div>
         <div id="onglet5" class="onglet" style="display: none;height: 90%"></div>
-        <div id="onglet6" class="onglet" style="display: none;height: 90%"></div>
         <?php if(isAuth(219)){ ?>
-        <div id="onglet7" class="onglet" style="display: none;height: 90%"></div>
+        <div id="onglet6" class="onglet" style="display: none;height: 90%"></div>
         <?php } ?>
     </div>
 

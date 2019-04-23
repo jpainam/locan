@@ -1,4 +1,5 @@
 $(document).ready(function () {
+     $("select[name=comboEnseignants]").select2();
     $("select[name=comboEnseignants]").change(chargerDonnees);
 });
 

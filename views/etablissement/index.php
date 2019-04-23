@@ -116,6 +116,7 @@
             <option value="0003">Liste d&eacute;taill&eacute;e des &eacute;l&egrave;ves</option>
             <option value="0004">Liste simplifi&eacute;e du personnels</option>
             <option value="0005">Liste d&eacute;taill&eacute;e du personnels</option>
+            <option value="0009">Fiche de demande d'inscription vierge</option>
             <option value="0006">Planning des activit&eacute;s p&eacute;dagogique</option>
             <option value="0007">Liste des chefs et sous-chefs de classes</option>
         </select>

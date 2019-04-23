@@ -6,13 +6,13 @@
 	les erreurs seront enregistrer dans le fichier temp/log.txt
 */
 define('DEVELOPMENT_ENVIRONMENT', true);
-
+define("REMOTE_SERVER", "https://www.uacosendai-edu.net/eschool/");
 /**
 	definir l'adresse du site
 	Definir par exemple
 	define('SITE_ROOT', 'http://192.168.1.103') si le serveur est distant
 */
-//define('SITE_ROOT', 'http://192.168.1.3/ipw/');
+//define('SITE_ROOT', 'http://192.168.43.62/locan/');
 define('SITE_ROOT', 'http://localhost/locan/');
 define('DEFAULT_CONTROLLER', "index");
 define('DEFAULT_ACTION', "index");
@@ -26,3 +26,7 @@ define("DB_PASSWORD", "");
 /* Adresse du server hebergeant la base de donnees*/
 define("DB_HOST", 'localhost');
 
+/**
+ * NOTIFICATION PARAMETERS
+ */
+define("SEND_NOTE_NOTIFICATION_DIRECTLY", false);

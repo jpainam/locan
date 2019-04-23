@@ -29,5 +29,18 @@ class horaireModel extends Model {
         return $this->query($query, ["horairedebut" => $horairedebut, 
             "horairefin" => $horairefin, "anneeacad" => $anneeacad]);
     }
+     public function findBy($conditions = array()) {
+        $str = "";
+        $params = array();
+        foreach ($conditions as $key => $condition) {
+            $str .= " $key = :$key AND ";
+            $params[$key] = $condition;
+        }
+        $str = substr($str, 0, strlen($str) - 4);
+        $query = "SELECT * FROM `" . $this->_table . "` xxx WHERE $str "
+                . "ORDER BY xxx.ORDRE ASC ";
+
+        return $this->query($query, $params);
+    }
 
 }

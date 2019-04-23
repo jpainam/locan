@@ -1,7 +1,9 @@
 <div id="entete">
     <div class="logo"><img src="<?php echo SITE_ROOT . "public/img/wide_enseignant.png"; ?>" /></div>
     <div style="margin-left: 100px">
-        <span class="select" style="width: 300px"><label>Enseignant : </label><?php echo $comboEnseignants; ?></span>
+        <span class="select2" style="width: 300px">
+            <label>Enseignant : </label>
+                <?php echo $comboEnseignants; ?></span>
     </div>
 </div>
 <div class="titre">Gestion des enseignants</div>
@@ -47,6 +49,7 @@
             <select onchange="imprimer();" name = "code_impression">
                 <option></option>
                 <option value="0001">Fiche de l'enseignant</option>
+                <option value="0010">Emploi du temps de l'enseignant</option>
                 <option value="0009">Repertoire t&eacute;l&eacute;phonique des enseignants</option>
         </div>
 </div>

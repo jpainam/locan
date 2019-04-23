@@ -33,8 +33,8 @@
             <img src="<?php echo img_imprimer(); ?>" />&nbsp;Editions:
             <select onchange="imprimer();" name = "code_impression">
                 <option></option>
-                <option value="0005">Imprimer une fiche de suivi disciplinaire vierge</option>
-                <option value="0006">Imprimer cette fiche de suivi disciplinaire</option>
+                <option value="0005">Fiche de suivi disciplinaire vierge</option>
+                <option value="0006">Fiche de suivi disciplinaire</option>
             </select>
         </div>
     </div>

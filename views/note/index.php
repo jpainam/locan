@@ -26,7 +26,7 @@
             <?php echo $tableNotes; ?>
         </div>
     </div>
-    <div id="onglet2" class="onglet" style="display: block;height: 90%">
+    <div id="onglet2" class="onglet" style="display: none;height: 90%">
          <div id="notes-non-saisies-content">
             <?php echo $tableNotesNonSaisies; ?>
         </div>

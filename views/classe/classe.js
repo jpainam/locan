@@ -3,7 +3,7 @@ $(document).ready(function () {
         "paging": false,
         "bInfo": false,
         "scrollCollapse": true,
-        "scrollY": 300,
+        "scrollY": 200,
         "columns": [
             null,
             {"width": "30%"},
@@ -39,7 +39,8 @@ $(document).ready(function () {
     var pop3 = popup("#dialog-3");
     var pop4 = popup("#dialog-4");
     var pop5 = popup("#dialog-5");
-    pop5.dialog("option", "height", 300);
+    pop5.dialog("option", "height", 400);
+    pop5.dialog("option", "width", 400);
 
     $("#ajout_eleve").button().on("click", function () {
         openPopup(pop1);
@@ -62,6 +63,7 @@ $(document).ready(function () {
         max: 6,
         min: 1
     });
+    $("select[name='manuels[]']").select2();
 });
 
 var openPopup = function (_pop) {

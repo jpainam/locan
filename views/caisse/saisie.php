@@ -14,15 +14,19 @@
         vertical-align: middle;
         line-height: 130px;
     }
+    #page-content span.select2{
+        width: inherit !important;
+    }
+
 </style>
 <div id="entete">
     <div class="logo"><img src="<?php echo SITE_ROOT . "public/img/wide_payement.png"; ?>" /></div>
     <div style="margin-left: 130px">
-        <span class="select" style="width: 200px">
+      <span class="select" style="width: 250px;margin-top: 0">
             <label>Classes : </label>
             <?php echo $comboClasses; ?>
         </span>
-        <span class="select" style="width: 300px">
+        <span class="select2" style="width: 250px !important; margin-top: 0">
             <label>Comptes &eacute;l&egrave;ves : </label>
             <select name="comboComptes" id="comboComptes">
                 <option value=""></option>

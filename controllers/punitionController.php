@@ -59,6 +59,8 @@ class punitionController extends Controller {
                 "enregistrerpar" => $this->session->user,
                 "anneeacademique" => $this->session->anneeacademique];
             $this->Punition->insert($params);
+            $this->sendNotification($this->request->comboEleves, $this->request->datepunition, 
+            $this->request->duree, $this->request->motif, $this->request->comboTypes);
             header("Location:" . Router::url("punition"));
         }
         $this->view->clientsJS("punition" . DS . "punition");
@@ -112,6 +114,39 @@ class punitionController extends Controller {
         }
         $view->Assign("punition", $punition);
         echo $view->Render("punition" . DS . "imprimer", false);
+    }
+    
+    public function sendNotification($ideleve, $datepunition, $duree, $motif, $typepunition){
+        $this->loadModel("eleve");
+        $eleve = $this->Eleve->get($ideleve);
+        $responsables = $this->Eleve->getResponsables($ideleve);
+        $results = [];
+        $url =  REMOTE_SERVER . "punition.php";
+        foreach($responsables as $resp){
+            if(empty($resp['NUMSMS'])){
+                continue;
+            }
+            $ch = curl_init($url);
+            curl_setopt_array($ch, array(
+                CURLOPT_HEADER => true,
+                CURLOPT_FRESH_CONNECT => true,
+                CURLOPT_POST => true,
+                //CURLOPT_CONNECTTIMEOUT => 0
+                CURLOPT_POSTFIELDS => array(
+                    "phone_number" => $resp['NUMSMS'],
+                    "student_name" =>  $eleve['PRENOM'],
+                    "type_punition" => $typepunition,
+                    "duree" => $duree,
+                    "motif" => $motif,
+                    "date_punition" => $datepunition
+                )
+            ));
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+            $results[] = curl_exec($ch);
+            curl_close($ch);
+        }
     }
 
 }
